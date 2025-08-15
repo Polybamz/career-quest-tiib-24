@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import AdBanner from "@/components/layout/AdBanner";
 import { Users, Target, Award, Briefcase, GraduationCap, Building2, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import officeTeamImage from "@/assets/office-team.jpg";
 import officeMeetingImage from "@/assets/office-meeting.jpg";
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  useScrollAnimation();
 
   const services = [
     {
@@ -79,38 +81,62 @@ const Home = () => {
 
       <div className="container mx-auto px-4">
         {/* Desktop Side Ads */}
-        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-0">
+        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" />
         </div>
-        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-0">
+        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" />
         </div>
 
         {/* Hero Section */}
-        <section className="py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Your Career Journey Starts Here
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8">
-                Empowering professionals with the tools, connections, and guidance needed to achieve career excellence and personal growth.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" className="text-lg px-8">
-                  Find Jobs
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8">
-                  Get Coaching
-                </Button>
+        <section 
+          className="py-20 relative overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${officeTeamImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20"></div>
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="text-center lg:text-left fade-in-left">
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
+                  Your Career Journey Starts Here
+                </h1>
+                <p className="text-xl text-white/90 mb-8 drop-shadow-md">
+                  Empowering professionals with the tools, connections, and guidance needed to achieve career excellence and personal growth.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-white shadow-lg">
+                    Find Jobs
+                  </Button>
+                  <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-primary shadow-lg">
+                    Get Coaching
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className="relative">
-              <img 
-                src={officeTeamImage} 
-                alt="Professional team working together in modern office" 
-                className="rounded-lg shadow-lg w-full h-auto"
-              />
+              <div className="relative fade-in-right">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-2xl border border-white/20">
+                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Transform Your Career?</h3>
+                  <p className="text-white/90 mb-6">Join thousands of professionals who have found their dream jobs through our platform.</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center text-white/90">
+                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                      <span>Personalized job matching</span>
+                    </div>
+                    <div className="flex items-center text-white/90">
+                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                      <span>Expert career coaching</span>
+                    </div>
+                    <div className="flex items-center text-white/90">
+                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                      <span>Access to top employers</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -118,14 +144,14 @@ const Home = () => {
         {/* Corporate Vision Section */}
         <section className="py-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative lg:order-first">
+            <div className="relative lg:order-first fade-in-left">
               <img 
                 src={officeMeetingImage} 
                 alt="Corporate meeting with professionals discussing strategy" 
                 className="rounded-lg shadow-lg w-full h-auto"
               />
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left fade-in-right">
               <h2 className="text-3xl font-bold mb-6">Building Tomorrow's Workforce Today</h2>
               <p className="text-lg text-muted-foreground mb-6">
                 We connect ambitious professionals with forward-thinking companies, creating partnerships that drive innovation and growth across industries.
@@ -143,7 +169,7 @@ const Home = () => {
         {/* Mission, Vision, Values */}
         <section className="py-16">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center">
+            <Card className="text-center scale-in">
               <CardHeader>
                 <Target className="h-12 w-12 text-primary mx-auto mb-4" />
                 <CardTitle>Mission</CardTitle>
@@ -154,7 +180,7 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center">
+            <Card className="text-center scale-in">
               <CardHeader>
                 <Users className="h-12 w-12 text-secondary mx-auto mb-4" />
                 <CardTitle>Vision</CardTitle>
@@ -165,7 +191,7 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center">
+            <Card className="text-center scale-in">
               <CardHeader>
                 <Award className="h-12 w-12 text-accent mx-auto mb-4" />
                 <CardTitle>Values</CardTitle>
@@ -181,12 +207,12 @@ const Home = () => {
 
         {/* Services Overview */}
         <section className="py-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">Our Services</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow fade-in-up">
                   <CardHeader>
                     <Icon className="h-12 w-12 text-primary mx-auto mb-4" />
                     <CardTitle className="text-lg">{service.title}</CardTitle>
@@ -201,11 +227,11 @@ const Home = () => {
         </section>
 
         {/* Statistics */}
-        <section className="py-16 bg-primary/5 rounded-2xl">
+        <section className="py-16 bg-primary/5 rounded-2xl fade-in-up">
           <h2 className="text-3xl font-bold text-center mb-12">Our Impact</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center scale-in">
                 <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
@@ -215,8 +241,8 @@ const Home = () => {
 
         {/* Testimonials */}
         <section className="py-16">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
-          <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
+          <div className="max-w-4xl mx-auto fade-in-up">
             <Card className="relative">
               <CardContent className="p-8">
                 <div className="text-center">
