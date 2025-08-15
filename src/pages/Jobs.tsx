@@ -70,7 +70,7 @@ const Jobs = () => {
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
+      job.company.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation = !location || job.location.toLowerCase().includes(location.toLowerCase());
     const matchesType = !jobType || job.type === jobType;
     return matchesSearch && matchesLocation && matchesType;
@@ -86,20 +86,20 @@ const Jobs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
+    <div className="min-h-screen bg-background w-full flex justify-center items-center flex-col pb-20 md:pb-0">
       {/* Top Banner Ad */}
       <div className="w-full flex justify-center py-4 bg-muted/30">
         <AdBanner width={970} height={90} position="top" />
       </div>
-
+      <div className="flex w-full">
+        {/* <div className="hidden lg:block  left-4 top-1/2 transform -translate-y-1/2">
+          <AdBanner width={160} height={600} position="side" />
+        </div> */}
+        
       <div className="container mx-auto px-4 py-8">
         {/* Desktop Side Ads */}
-        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-10">
-          <AdBanner width={160} height={600} position="side" />
-        </div>
-        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-10">
-          <AdBanner width={160} height={600} position="side" />
-        </div>
+
+
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -110,7 +110,7 @@ const Jobs = () => {
         </div>
 
         {/* Search Filters */}
-        <Card className="mb-8">
+        <Card className="mb-8 ">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Input
@@ -123,7 +123,7 @@ const Jobs = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
-              <Select value={jobType} onValueChange={setJobType}>
+              {/* <Select value={jobType} onValueChange={setJobType}>
                 <SelectTrigger>
                   <SelectValue placeholder="Job Type" />
                 </SelectTrigger>
@@ -134,14 +134,14 @@ const Jobs = () => {
                   <SelectItem value="Contract">Contract</SelectItem>
                   <SelectItem value="Remote">Remote</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
               <Button className="w-full">Search Jobs</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Job Listings */}
-        <div className="space-y-6">
+        <div className="grid lg:grid-cols-2 gap-2 w-full">
           {filteredJobs.map((job) => (
             <Card key={job.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
@@ -167,13 +167,13 @@ const Jobs = () => {
                       Expires: {new Date(job.expiryDate).toLocaleDateString()}
                     </div>
                   </div>
-                  
+
                   <p className="text-muted-foreground">{job.description}</p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="text-lg font-semibold text-primary">{job.salary}</div>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-2">
                     {job.tags.map((tag, index) => (
                       <Badge key={index} variant="outline" className="text-xs">
@@ -181,7 +181,7 @@ const Jobs = () => {
                       </Badge>
                     ))}
                   </div>
-                  
+
                   <div className="flex gap-2 pt-4">
                     <Button onClick={() => handleApply(job)} className="flex-1">
                       {job.applyType === "external" ? (
@@ -221,6 +221,12 @@ const Jobs = () => {
         <div className="flex justify-center py-8">
           <AdBanner width={728} height={90} position="inline" />
         </div>
+      </div>
+      <div className="w-[200px]"></div>
+        <div className="hidden lg:block fixed border  right-4 top-1/2 transform -translate-y-1/2 z-10">
+          <AdBanner width={160} height={550} position="side" />
+        </div>
+
       </div>
     </div>
   );

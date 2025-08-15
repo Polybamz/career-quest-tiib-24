@@ -42,9 +42,9 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <Button variant="secondary" size="sm">
+            <Link to={'/auth'} className="py-2 px-4 rounded-2 bg-blue-800">
               Sign In
-            </Button>
+            </Link>
           </nav>
 
           {/* Mobile Menu */}
@@ -71,10 +71,11 @@ const Header = () => {
                     {item.name}
                   </Link>
                 ))}
-                <Button variant="secondary" size="sm" className="w-fit">
-                  Sign In
-                </Button>
-              </div>
+                
+              <Link to={'/auth'} className="py-2 px-4 rounded-2 bg-blue-800">
+              Sign In
+            </Link>
+            </div>
             </SheetContent>
           </Sheet>
         </div>
