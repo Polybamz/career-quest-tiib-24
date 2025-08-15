@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import TIIB from "./pages/TIIB";
 import NotFound from "./pages/NotFound";
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import MobileNav from "./components/layout/MobileNav";
 import Register from "./pages/Register";
 
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
+          <Footer />
           <MobileNav />
         </div>
       </BrowserRouter>

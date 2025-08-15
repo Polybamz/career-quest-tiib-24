@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import AdBanner from "@/components/layout/AdBanner";
 import { Users, Target, Award, Briefcase, GraduationCap, Building2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import officeTeamImage from "@/assets/office-team.jpg";
+import officeMeetingImage from "@/assets/office-meeting.jpg";
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -77,28 +79,64 @@ const Home = () => {
 
       <div className="container mx-auto px-4">
         {/* Desktop Side Ads */}
-        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-10">
+        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-0">
           <AdBanner width={160} height={600} position="side" />
         </div>
-        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-10">
+        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-0">
           <AdBanner width={160} height={600} position="side" />
         </div>
 
         {/* Hero Section */}
-        <section className="py-20 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Your Career Journey Starts Here
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Empowering professionals with the tools, connections, and guidance needed to achieve career excellence and personal growth.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8">
-              Find Jobs
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8">
-              Get Coaching
-            </Button>
+        <section className="py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Your Career Journey Starts Here
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8">
+                Empowering professionals with the tools, connections, and guidance needed to achieve career excellence and personal growth.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button size="lg" className="text-lg px-8">
+                  Find Jobs
+                </Button>
+                <Button variant="outline" size="lg" className="text-lg px-8">
+                  Get Coaching
+                </Button>
+              </div>
+            </div>
+            <div className="relative">
+              <img 
+                src={officeTeamImage} 
+                alt="Professional team working together in modern office" 
+                className="rounded-lg shadow-lg w-full h-auto"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Corporate Vision Section */}
+        <section className="py-16">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="relative lg:order-first">
+              <img 
+                src={officeMeetingImage} 
+                alt="Corporate meeting with professionals discussing strategy" 
+                className="rounded-lg shadow-lg w-full h-auto"
+              />
+            </div>
+            <div className="text-center lg:text-left">
+              <h2 className="text-3xl font-bold mb-6">Building Tomorrow's Workforce Today</h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                We connect ambitious professionals with forward-thinking companies, creating partnerships that drive innovation and growth across industries.
+              </p>
+              <p className="text-muted-foreground mb-8">
+                Our comprehensive approach combines cutting-edge technology with personalized human insight to ensure every career move is a step toward success.
+              </p>
+              <Button variant="outline" size="lg">
+                Learn About Our Approach
+              </Button>
+            </div>
           </div>
         </section>
 
