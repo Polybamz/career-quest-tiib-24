@@ -1,0 +1,45 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Jobs from "./pages/Jobs";
+import Coaching from "./pages/Coaching";
+import Employers from "./pages/Employers";
+import Contact from "./pages/Contact";
+import TIIB from "./pages/TIIB";
+import NotFound from "./pages/NotFound";
+import Header from "./components/layout/Header";
+import MobileNav from "./components/layout/MobileNav";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/jobs" element={<Jobs />} />
+              <Route path="/coaching" element={<Coaching />} />
+              <Route path="/employers" element={<Employers />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/tiib" element={<TIIB />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <MobileNav />
+        </div>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;
