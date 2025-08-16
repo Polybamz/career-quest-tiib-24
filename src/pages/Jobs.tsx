@@ -1,232 +1,400 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AdBanner from "@/components/layout/AdBanner";
-import { MapPin, Calendar, ExternalLink, Mail } from "lucide-react";
+import { MapPin, Briefcase, DollarSign, ExternalLink, Mail, Search, Clock } from "lucide-react";
+import { cn } from "@/lib/utils"; // Assuming you have a utility for class names
+
+// --- Helper function for relative time ---
+const timeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  let interval = seconds / 31536000;
+  if (interval > 1) return `${Math.floor(interval)} years ago`;
+  interval = seconds / 2592000;
+  if (interval > 1) return `${Math.floor(interval)} months ago`;
+  interval = seconds / 86400;
+  if (interval > 1) return `${Math.floor(interval)} days ago`;
+  interval = seconds / 3600;
+  if (interval > 1) return `${Math.floor(interval)} hours ago`;
+  interval = seconds / 60;
+  if (interval > 1) return `${Math.floor(interval)} minutes ago`;
+  return `${Math.floor(seconds)} seconds ago`;
+};
+
 
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  // Mock job data
-  const jobs = [
+  // --- Enriched Mock Job Data ---
+  // Added logoUrl and postedDate for a more realistic and user-friendly experience
+  const jobs = useMemo(() => [
     {
       id: 1,
       title: "Senior Software Engineer",
       company: "TechCorp Inc.",
+      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
       location: "Lagos, Nigeria",
       type: "Full-time",
-      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies.",
-      expiryDate: "2024-09-15",
+      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
+      postedDate: "2025-08-10T10:00:00Z",
       applyType: "external",
       applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "₦8,000,000 - ₦12,000,000",
-      tags: ["React", "Node.js", "AWS", "Senior Level"]
+      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
     },
     {
       id: 2,
       title: "Marketing Manager",
       company: "Growth Marketing Ltd",
+      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
       location: "Abuja, Nigeria",
       type: "Full-time",
-      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required.",
-      expiryDate: "2024-09-20",
+      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
+      postedDate: "2025-08-12T14:30:00Z",
       applyType: "email",
       email: "careers@growthmarketing.com",
-      salary: "₦6,000,000 - ₦9,000,000",
-      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level"]
+      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
     },
     {
       id: 3,
-      title: "Data Analyst",
+      title: "Data Analyst (Contract)",
       company: "Analytics Pro",
+      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
       location: "Port Harcourt, Nigeria",
       type: "Contract",
-      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools required.",
-      expiryDate: "2024-09-25",
+      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
+      postedDate: "2025-08-15T09:00:00Z",
       applyType: "external",
       applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "₦4,500,000 - ₦7,000,000",
-      tags: ["Python", "SQL", "Data Analysis", "Contract"]
+      salary: "₦500,000 - ₦700,000 Monthly",
+      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
     },
     {
       id: 4,
       title: "UI/UX Designer",
       company: "Design Studios",
+      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
       location: "Lagos, Nigeria",
-      type: "Full-time",
-      description: "Create stunning user experiences and interfaces. Portfolio showcasing mobile and web design expertise required.",
-      expiryDate: "2024-09-30",
+      type: "Remote",
+      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
+      postedDate: "2025-08-05T11:00:00Z",
       applyType: "email",
       email: "hello@designstudios.com",
-      salary: "₦5,000,000 - ₦8,000,000",
-      tags: ["UI/UX", "Figma", "Design", "Creative"]
+      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
+    },
+     {
+      id: 1,
+      title: "Senior Software Engineer",
+      company: "TechCorp Inc.",
+      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
+      location: "Lagos, Nigeria",
+      type: "Full-time",
+      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
+      postedDate: "2025-08-10T10:00:00Z",
+      applyType: "external",
+      applyLink: "https://techcorp.com/careers/senior-engineer",
+      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
+    },
+    {
+      id: 2,
+      title: "Marketing Manager",
+      company: "Growth Marketing Ltd",
+      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
+      location: "Abuja, Nigeria",
+      type: "Full-time",
+      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
+      postedDate: "2025-08-12T14:30:00Z",
+      applyType: "email",
+      email: "careers@growthmarketing.com",
+      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
+    },
+    {
+      id: 3,
+      title: "Data Analyst (Contract)",
+      company: "Analytics Pro",
+      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
+      location: "Port Harcourt, Nigeria",
+      type: "Contract",
+      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
+      postedDate: "2025-08-15T09:00:00Z",
+      applyType: "external",
+      applyLink: "https://analyticspro.com/careers/data-analyst",
+      salary: "₦500,000 - ₦700,000 Monthly",
+      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
+    },
+    {
+      id: 4,
+      title: "UI/UX Designer",
+      company: "Design Studios",
+      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
+      location: "Lagos, Nigeria",
+      type: "Remote",
+      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
+      postedDate: "2025-08-05T11:00:00Z",
+      applyType: "email",
+      email: "hello@designstudios.com",
+      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
+    }, {
+      id: 1,
+      title: "Senior Software Engineer",
+      company: "TechCorp Inc.",
+      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
+      location: "Lagos, Nigeria",
+      type: "Full-time",
+      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
+      postedDate: "2025-08-10T10:00:00Z",
+      applyType: "external",
+      applyLink: "https://techcorp.com/careers/senior-engineer",
+      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
+    },
+    {
+      id: 2,
+      title: "Marketing Manager",
+      company: "Growth Marketing Ltd",
+      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
+      location: "Abuja, Nigeria",
+      type: "Full-time",
+      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
+      postedDate: "2025-08-12T14:30:00Z",
+      applyType: "email",
+      email: "careers@growthmarketing.com",
+      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
+    },
+    {
+      id: 3,
+      title: "Data Analyst (Contract)",
+      company: "Analytics Pro",
+      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
+      location: "Port Harcourt, Nigeria",
+      type: "Contract",
+      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
+      postedDate: "2025-08-15T09:00:00Z",
+      applyType: "external",
+      applyLink: "https://analyticspro.com/careers/data-analyst",
+      salary: "₦500,000 - ₦700,000 Monthly",
+      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
+    },
+    {
+      id: 4,
+      title: "UI/UX Designer",
+      company: "Design Studios",
+      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
+      location: "Lagos, Nigeria",
+      type: "Remote",
+      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
+      postedDate: "2025-08-05T11:00:00Z",
+      applyType: "email",
+      email: "hello@designstudios.com",
+      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     }
-  ];
+  ], []);
 
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !location || job.location.toLowerCase().includes(location.toLowerCase());
-    const matchesType = !jobType || job.type === jobType;
-    return matchesSearch && matchesLocation && matchesType;
-  });
+  // --- Filtering Logic ---
+  const filteredJobs = useMemo(() => {
+    return jobs.filter(job => {
+      const searchTermLower = searchTerm.toLowerCase();
+      const locationLower = location.toLowerCase();
+      
+      const matchesSearch = !searchTerm || 
+        job.title.toLowerCase().includes(searchTermLower) ||
+        job.company.toLowerCase().includes(searchTermLower) ||
+        job.tags.some(tag => tag.toLowerCase().includes(searchTermLower));
+        
+      const matchesLocation = !location || job.location.toLowerCase().includes(locationLower);
+      const matchesType = !jobType || job.type === jobType;
+      
+      return matchesSearch && matchesLocation && matchesType;
+    });
+  }, [jobs, searchTerm, location, jobType]);
 
-  const handleApply = (job: typeof jobs[0]) => {
+  // --- Set initial selected job ---
+  if (!selectedJob && filteredJobs.length > 0) {
+    setSelectedJob(filteredJobs[0]);
+  } else if (filteredJobs.length === 0 && selectedJob) {
+    setSelectedJob(null);
+  }
+
+  // --- Application Handler ---
+  const handleApply = (job: Job) => {
     if (job.applyType === "external" && job.applyLink) {
       window.open(job.applyLink, "_blank");
     } else if (job.applyType === "email" && job.email) {
-      // In a real app, this would redirect to a job detail page
-      alert(`To apply for this position, please send your CV to: ${job.email}`);
+      // In a real app, this might open a pre-filled email client or an in-app application form.
+      window.location.href = `mailto:${job.email}?subject=Application for ${job.title}`;
     }
   };
 
+  type Job = typeof jobs[0];
+
   return (
-    <div className="min-h-screen bg-background w-full flex justify-center items-center flex-col pb-20 md:pb-0">
-      {/* Top Banner Ad */}
-      <div className="w-full flex justify-center py-4 bg-muted/30">
+    <div className="min-h-screen bg-muted/20 w-full">
+      {/* --- Top Banner Ad --- */}
+      <div className="w-full flex justify-center py-4 bg-background">
         <AdBanner width={970} height={90} position="top" />
       </div>
-      <div className="flex w-full">
-        {/* <div className="hidden lg:block  left-4 top-1/2 transform -translate-y-1/2">
-          <AdBanner width={160} height={600} position="side" />
-        </div> */}
-        
+
       <div className="container mx-auto px-4 py-8">
-        {/* Desktop Side Ads */}
-
-
-
-        {/* Header */}
+        {/* --- Header --- */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">Find Your Dream Job</h1>
-          <p className="text-xl text-muted-foreground">
-            Discover opportunities that match your skills and aspirations
+          <h1 className="text-4xl font-extrabold tracking-tight mb-2">Find Your Next Opportunity</h1>
+          <p className="text-lg text-muted-foreground">
+            Search through {jobs.length} open positions.
           </p>
         </div>
 
-        {/* Search Filters */}
-        <Card className="mb-8 ">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Input
-                placeholder="Search jobs or companies..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <Input
-                placeholder="Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-              {/* <Select value={jobType} onValueChange={setJobType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Job Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
-                  <SelectItem value="Full-time">Full-time</SelectItem>
-                  <SelectItem value="Part-time">Part-time</SelectItem>
-                  <SelectItem value="Contract">Contract</SelectItem>
-                  <SelectItem value="Remote">Remote</SelectItem>
-                </SelectContent>
-              </Select> */}
-              <Button className="w-full">Search Jobs</Button>
+        {/* --- Search & Filters Bar --- */}
+        <Card className="mb-6 shadow-sm">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+              <div className="md:col-span-2">
+                <Input
+                  placeholder="Job title, keywords, or company"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="h-12 text-base"
+                />
+              </div>
+              <div>
+                <Input
+                  placeholder="City or location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="h-12 text-base"
+                />
+              </div>
+              <div>
+                {/* <Select value={jobType} onValueChange={setJobType}>
+                  <SelectTrigger className="h-12 text-base">
+                    <SelectValue placeholder="Job Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="Full-time">Full-time</SelectItem>
+                    <SelectItem value="Contract">Contract</SelectItem>
+                    <SelectItem value="Remote">Remote</SelectItem>
+                  </SelectContent>
+                </Select> */}
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Job Listings */}
-        <div className="grid lg:grid-cols-2 gap-2 w-full">
-          {filteredJobs.map((job) => (
-            <Card key={job.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl mb-2">{job.title}</CardTitle>
-                    <CardDescription className="text-lg font-medium text-foreground">
-                      {job.company}
-                    </CardDescription>
-                  </div>
-                  <Badge variant="secondary">{job.type}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      {job.location}
+        {/* --- Main Content: Two-Column Layout --- */}
+        <main className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* --- Left Column: Job List --- */}
+          <div className="lg:col-span-5 xl:col-span-4">
+            <h2 className="text-xl font-semibold mb-4">
+              {filteredJobs.length} Job{filteredJobs.length !== 1 && 's'} Found
+            </h2>
+            <div className="space-y-3  pr-2">
+              {filteredJobs.length > 0 ? (
+                filteredJobs.map((job) => (
+                  <Card 
+                    key={job.id} 
+                    onClick={() => setSelectedJob(job)}
+                    className={cn(
+                      "cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary",
+                      selectedJob?.id === job.id && "border-primary bg-primary/5 shadow-md"
+                    )}
+                  >
+                    <CardContent className="p-4 flex gap-4">
+                      <img src={job.logoUrl} alt={`${job.company} logo`} className="h-12 w-12 rounded-md bg-muted" />
+                      <div className="flex-grow">
+                        <p className="text-sm text-muted-foreground">{job.company}</p>
+                        <h3 className="font-semibold text-base leading-tight">{job.title}</h3>
+                        <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                           <div className="flex items-center gap-1"><MapPin size={12} /> {job.location}</div>
+                           <div className="flex items-center gap-1"><DollarSign size={12} /> {job.salary.split(' ')[0]}</div>
+                           <div className="flex items-center gap-1"><Briefcase size={12} /> {job.type}</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                 <div className="text-center py-12">
+                   <p className="text-lg text-muted-foreground">No jobs found.</p>
+                   <p className="text-sm text-muted-foreground mt-1">Try adjusting your search filters.</p>
+                 </div>
+              )}
+            </div>
+          </div>
+
+          {/* --- Right Column: Job Details --- */}
+          <div className="lg:col-span-7 xl:col-span-8">
+            {selectedJob ? (
+              <Card className="sticky top-24 h-[70vh] overflow-y-auto shadow-sm">
+                <CardHeader>
+                  <div className="flex gap-4 items-start">
+                    <img src={selectedJob.logoUrl} alt={`${selectedJob.company} logo`} className="h-16 w-16 rounded-lg bg-muted" />
+                    <div>
+                      <CardTitle className="text-2xl mb-1">{selectedJob.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {selectedJob.company} &middot; {selectedJob.location}
+                      </CardDescription>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Posted {timeAgo(selectedJob.postedDate)} &middot; <Badge variant="secondary">{selectedJob.type}</Badge>
+                      </p>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      Expires: {new Date(job.expiryDate).toLocaleDateString()}
-                    </div>
                   </div>
-
-                  <p className="text-muted-foreground">{job.description}</p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-semibold text-primary">{job.salary}</div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {job.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
-                    <Button onClick={() => handleApply(job)} className="flex-1">
-                      {job.applyType === "external" ? (
-                        <>
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Apply Now
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="h-4 w-4 mr-2" />
-                          Apply via Email
-                        </>
-                      )}
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2 mb-6">
+                    <Button onClick={() => handleApply(selectedJob)} className="flex-1 h-11 text-base">
+                      {selectedJob.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2"/> : <Mail className="h-4 w-4 mr-2"/>}
+                      Apply Now
                     </Button>
-                    <Button variant="outline">Save Job</Button>
+                    <Button variant="outline" className="h-11">Save Job</Button>
                   </div>
+
+                  <div className="space-y-6">
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
+                        <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{selectedJob.salary}</p>
+                     </div>
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Job Description</h4>
+                        <p className="text-muted-foreground whitespace-pre-line">{selectedJob.description}</p>
+                     </div>
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedJob.tags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="text-sm py-1 px-3">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="flex items-center justify-center h-[70vh] shadow-sm">
+                <div className="text-center">
+                  <p className="text-xl text-muted-foreground">Select a job to see details</p>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {filteredJobs.length === 0 && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <p className="text-xl text-muted-foreground">
-                No jobs found matching your criteria.
-              </p>
-              <p className="text-muted-foreground mt-2">
-                Try adjusting your search filters or check back later for new opportunities.
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Inline Ad between job listings */}
-        <div className="flex justify-center py-8">
-          <AdBanner width={728} height={90} position="inline" />
-        </div>
-      </div>
-      <div className="w-[200px]"></div>
-        <div className="hidden lg:block fixed border  right-4 top-1/2 transform -translate-y-1/2 z-10">
-          <AdBanner width={160} height={550} position="side" />
-        </div>
-
+              </Card>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );

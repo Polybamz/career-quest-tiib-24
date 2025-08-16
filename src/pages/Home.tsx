@@ -67,6 +67,8 @@ const Home = () => {
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
 
   const prevTestimonial = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -75,18 +77,18 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       {/* Top Banner Ad */}
-      <div className="w-full flex justify-center py-4 bg-muted/30">
-        <AdBanner width={970} height={90} position="top" />
+      <div className="w-full flex justify-center p-2  bg-muted/30">
+        <AdBanner width={screenWidth-70} height={90} position="top" />
       </div>
 
       <div className="container mx-auto px-4">
-        {/* Desktop Side Ads */}
+        {/* Desktop Side Ads
         <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" />
         </div>
         <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" />
-        </div>
+        </div> */}
 
         {/* Hero Section */}
         <section 
@@ -301,21 +303,7 @@ const Home = () => {
           </Card>
         </section>
 
-        {/* Quick Links */}
-        <section className="py-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Connect With Us</h2>
-          <div className="flex justify-center space-x-6">
-            <Button variant="outline" size="lg">
-              LinkedIn
-            </Button>
-            <Button variant="outline" size="lg">
-              Facebook
-            </Button>
-            <Button variant="outline" size="lg">
-              Newsletter
-            </Button>
-          </div>
-        </section>
+        
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="hidden md:block bg-muted border-t">
+    <footer className="hidden md:block bg-muted z-100 border-t">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
