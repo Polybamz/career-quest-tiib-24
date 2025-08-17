@@ -82,13 +82,12 @@ const Home = () => {
       </div>
 
       <div className="container mx-auto px-4">
-        {/* Desktop Side Ads
         <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-[5]">
-          <AdBanner width={160} height={600} position="side" />
+          <AdBanner width={160} height={600} position="side" isHidden={false} />
         </div>
         <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" />
-        </div> */}
+        </div>
 
         {/* Hero Section */}
         <section 

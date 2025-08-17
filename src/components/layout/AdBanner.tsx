@@ -3,12 +3,13 @@ interface AdBannerProps {
   height: number;
   position: "top" | "side" | "inline";
   className?: string;
+  isHidden?: boolean;
 }
 
-const AdBanner = ({ width, height, position, className = "" }: AdBannerProps) => {
+const AdBanner = ({ width, height, position, className = "", isHidden = true }: AdBannerProps) => {
   return (
     <div 
-      className={`bg-muted border border-border rounded-lg flex items-center justify-center ${className}`}
+      className={`bg-muted border border-border rounded-lg flex items-center justify-center ${className} ${isHidden && 'hidden'}`}
       style={{ width: `${width}px`, height: `${height}px` }}
     >
       <div className="text-center text-muted-foreground">
