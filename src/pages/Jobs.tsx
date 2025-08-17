@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AdBanner from "@/components/layout/AdBanner";
 import { MapPin, Briefcase, DollarSign, ExternalLink, Mail, Search, Clock } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
 import { cn } from "@/lib/utils"; // Assuming you have a utility for class names
 
 // --- Helper function for relative time ---
@@ -32,7 +34,7 @@ const Jobs = () => {
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-
+   useScrollAnimation();
   // --- Enriched Mock Job Data ---
   // Added logoUrl and postedDate for a more realistic and user-friendly experience
   const jobs = useMemo(() => [
@@ -40,167 +42,167 @@ const Jobs = () => {
       id: 1,
       title: "Senior Software Engineer",
       company: "TechCorp Inc.",
-      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Full-time",
       description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
       postedDate: "2025-08-10T10:00:00Z",
       applyType: "external",
       applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      salary: "$8,000,000 - $12,000,000 Annually",
       tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
     },
     {
       id: 2,
       title: "Marketing Manager",
       company: "Growth Marketing Ltd",
-      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
+      logoUrl: "/placeholder.svg",
       location: "Abuja, Nigeria",
       type: "Full-time",
       description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
       postedDate: "2025-08-12T14:30:00Z",
       applyType: "email",
       email: "careers@growthmarketing.com",
-      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      salary: "$6,000,000 - $9,000,000 Annually",
       tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
     },
     {
       id: 3,
       title: "Data Analyst (Contract)",
       company: "Analytics Pro",
-      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
+      logoUrl: "/placeholder.svg",
       location: "Port Harcourt, Nigeria",
       type: "Contract",
       description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
       postedDate: "2025-08-15T09:00:00Z",
       applyType: "external",
       applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "₦500,000 - ₦700,000 Monthly",
+      salary: "$500,000 - $700,000 Monthly",
       tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
     },
     {
       id: 4,
       title: "UI/UX Designer",
       company: "Design Studios",
-      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Remote",
       description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
       postedDate: "2025-08-05T11:00:00Z",
       applyType: "email",
       email: "hello@designstudios.com",
-      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      salary: "$5,000,000 - $8,000,000 Annually",
       tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     },
      {
       id: 1,
       title: "Senior Software Engineer",
       company: "TechCorp Inc.",
-      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Full-time",
       description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
       postedDate: "2025-08-10T10:00:00Z",
       applyType: "external",
       applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      salary: "$8,000,000 - $12,000,000 Annually",
       tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
     },
     {
       id: 2,
       title: "Marketing Manager",
       company: "Growth Marketing Ltd",
-      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
+      logoUrl: "/placeholder.svg",
       location: "Abuja, Nigeria",
       type: "Full-time",
       description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
       postedDate: "2025-08-12T14:30:00Z",
       applyType: "email",
       email: "careers@growthmarketing.com",
-      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      salary: "$6,000,000 - $9,000,000 Annually",
       tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
     },
     {
       id: 3,
       title: "Data Analyst (Contract)",
       company: "Analytics Pro",
-      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
+      logoUrl: "/placeholder.svg",
       location: "Port Harcourt, Nigeria",
       type: "Contract",
       description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
       postedDate: "2025-08-15T09:00:00Z",
       applyType: "external",
       applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "₦500,000 - ₦700,000 Monthly",
+      salary: "$500,000 - $700,000 Monthly",
       tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
     },
     {
       id: 4,
       title: "UI/UX Designer",
       company: "Design Studios",
-      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Remote",
       description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
       postedDate: "2025-08-05T11:00:00Z",
       applyType: "email",
       email: "hello@designstudios.com",
-      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      salary: "$5,000,000 - $8,000,000 Annually",
       tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     }, {
       id: 1,
       title: "Senior Software Engineer",
       company: "TechCorp Inc.",
-      logoUrl: "https://via.placeholder.com/50/0000FF/FFFFFF?text=T",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Full-time",
       description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
       postedDate: "2025-08-10T10:00:00Z",
       applyType: "external",
       applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "₦8,000,000 - ₦12,000,000 Annually",
+      salary: "$8,000,000 - $12,000,000 Annually",
       tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
     },
     {
       id: 2,
       title: "Marketing Manager",
       company: "Growth Marketing Ltd",
-      logoUrl: "https://via.placeholder.com/50/FF0000/FFFFFF?text=G",
+      logoUrl: "/placeholder.svg",
       location: "Abuja, Nigeria",
       type: "Full-time",
       description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
       postedDate: "2025-08-12T14:30:00Z",
       applyType: "email",
       email: "careers@growthmarketing.com",
-      salary: "₦6,000,000 - ₦9,000,000 Annually",
+      salary: "$6,000,000 - $9,000,000 Annually",
       tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
     },
     {
       id: 3,
       title: "Data Analyst (Contract)",
       company: "Analytics Pro",
-      logoUrl: "https://via.placeholder.com/50/008000/FFFFFF?text=A",
+      logoUrl: "/placeholder.svg",
       location: "Port Harcourt, Nigeria",
       type: "Contract",
       description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
       postedDate: "2025-08-15T09:00:00Z",
       applyType: "external",
       applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "₦500,000 - ₦700,000 Monthly",
+      salary: "$500,000 - $700,000 Monthly",
       tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
     },
     {
       id: 4,
       title: "UI/UX Designer",
       company: "Design Studios",
-      logoUrl: "https://via.placeholder.com/50/FFA500/FFFFFF?text=D",
+      logoUrl: "/placeholder.svg",
       location: "Lagos, Nigeria",
       type: "Remote",
       description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
       postedDate: "2025-08-05T11:00:00Z",
       applyType: "email",
       email: "hello@designstudios.com",
-      salary: "₦5,000,000 - ₦8,000,000 Annually",
+      salary: "$5,000,000 - $8,000,000 Annually",
       tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     }
   ], []);
@@ -245,9 +247,8 @@ const Jobs = () => {
   return (
     <div className="min-h-screen bg-muted/20 w-full">
       {/* --- Top Banner Ad --- */}
-      <div className="w-full flex justify-center py-4 bg-background">
-        <AdBanner width={970} height={90} position="top" />
-      </div>
+        <AdBanner width={970} height={90} position="top" isHidden={false}/>
+    
 
       <div className="container mx-auto px-4 py-8">
         {/* --- Header --- */}

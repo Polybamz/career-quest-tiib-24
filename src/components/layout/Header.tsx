@@ -50,7 +50,7 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <Link to={'/auth'} className="py-2 px-4 rounded-2 bg-blue-800">
+            <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
               Sign In
             </Link>
           </nav>
@@ -80,7 +80,7 @@ const Header = () => {
                   </Link>
                 ))}
                 
-              <Link to={'/auth'} className="py-2 px-4 rounded-2 bg-blue-800">
+              <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary">
               Sign In
             </Link>
             </div>

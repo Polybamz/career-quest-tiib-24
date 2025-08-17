@@ -76,13 +76,12 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
-      {/* Top Banner Ad */}
-      <div className="w-full flex justify-center p-2  bg-muted/30">
-        <AdBanner width={screenWidth-70} height={90} position="top" />
-      </div>
+    <div className="min-h-screen bg-background flex pb-20 md:pb-0">
+      <div className="w-[200px]"></div>
 
       <div className="container mx-auto px-4">
+                  <AdBanner width={1000} height={160} position="top" isHidden={true} />
+
         <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={600} position="side" isHidden={false} />
         </div>
@@ -186,29 +185,43 @@ const Home = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  To bridge the gap between talented professionals and exceptional career opportunities through innovative solutions.
+                  To empower job seekers and professionals with Integrity and excellence by providing trusted recruitment solutions, world-class career services and personalized coaching that open doors to notional and internationals opportubities
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center scale-in">
+            <Card className="text-center scale-in ">
               <CardHeader>
                 <Users className="h-12 w-12 text-secondary mx-auto mb-4" />
                 <CardTitle>Vision</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  To become the leading platform where careers flourish and businesses find their perfect talent matches.
+                  To become Africas leading career empowerment hub, recognized fir bridging talents with opportubities, transforming recruitment for organizations and inspiring professional to grow with confidence and purpose
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center scale-in">
+            <Card className=" scale-in max-h-[400px] overflow-scroll">
               <CardHeader>
                 <Award className="h-12 w-12 text-accent mx-auto mb-4" />
-                <CardTitle>Values</CardTitle>
+                <CardTitle className="text-center">Values</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  Integrity, Excellence, Innovation, and Empowerment guide everything we do in serving our community.
+                <p className="text-muted-foreground tesxt-start">
+                  <strong>Integrity - </strong> We stay true to honesty and transparency
+                </p>
+                <p className="text-muted-foreground text-start">
+                  <strong>Excellence - </strong> We deliver result that meets global standards
+                </p>
+                       <p className="text-muted-foreground text-start">
+                  <strong>Empowerment - </strong> We equip individuals and businesses with tools for success
+                </p>
+                       <p className="text-muted-foreground text-start">
+                  <strong>Growth - </strong> We promote continues learning and career development.
+                </p>
+                       <p className="text-muted-foreground text-start">
+                  <strong>Impact - </strong> We measure success by the lives transformed and opportubities created.
+                </p>       <p className="text-muted-foreground text-start">
+                  <strong>Availability - </strong> We are known for our ever-present nature, always to respond to you and provide you with assistance when you need it.
                 </p>
               </CardContent>
             </Card>

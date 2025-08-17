@@ -14,6 +14,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import MobileNav from "./components/layout/MobileNav";
 import Register from "./pages/Register";
+import ArticlePage from "./pages/Article";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/tiib" element={<TIIB />} />
               <Route path="/auth" element={<Register/>}/>
+              <Route path="/tiib/article/:id" element={<ArticlePage/>}/>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

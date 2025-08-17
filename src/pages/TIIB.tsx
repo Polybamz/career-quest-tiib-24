@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import AdBanner from "@/components/layout/AdBanner";
+import { Link } from "react-router-dom";
 import { Target, Heart, Award, Users, BookOpen, Share2, Clock, User } from "lucide-react";
 
 const TIIB = () => {
@@ -71,7 +72,7 @@ const TIIB = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">The Institute of Integrity Building</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Fostering ethical leadership and building integrity in professional environments 
+            Fostering ethical leadership and building integrity in professional environments
             across Africa and beyond.
           </p>
         </div>
@@ -86,7 +87,7 @@ const TIIB = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  To develop and promote integrity-based leadership practices that transform 
+                  To develop and promote integrity-based leadership practices that transform
                   organizations and communities across Africa, creating sustainable positive impact.
                 </p>
               </CardContent>
@@ -98,7 +99,7 @@ const TIIB = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  To be the leading institute for integrity building in Africa, recognized globally 
+                  To be the leading institute for integrity building in Africa, recognized globally
                   for excellence in ethical leadership development and organizational transformation.
                 </p>
               </CardContent>
@@ -110,7 +111,7 @@ const TIIB = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Integrity, Excellence, Innovation, Collaboration, and Impact guide our approach 
+                  Integrity, Excellence, Innovation, Collaboration, and Impact guide our approach
                   to building ethical leaders and sustainable organizations.
                 </p>
               </CardContent>
@@ -149,7 +150,7 @@ const TIIB = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Latest Insights</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogPosts.map((post) => (
-              <Card key={post.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <Card key={post.id} className="hover:shadow-lg transition-shadow ">
                 <div className="h-48 bg-muted flex items-center justify-center">
                   <span className="text-muted-foreground">Research Image</span>
                 </div>
@@ -174,9 +175,12 @@ const TIIB = () => {
                       {post.readTime}
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full">
-                    Read More
-                  </Button>
+                  <Link to={`/tiib/article/${post.id}`} className="w-full">
+                    <Button variant="outline" className="w-full">
+                      Read More
+                    </Button>
+                  </Link>
+
                 </CardContent>
               </Card>
             ))}

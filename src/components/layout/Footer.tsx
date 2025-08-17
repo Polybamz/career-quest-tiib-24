@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import logo from '../../assets/logo/logo2.jpeg'
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -29,7 +31,9 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded bg-primary"></div>
+              <div className="h-12 w-12 rounded bg-muted">
+                <img src={`${logo}`} alt="logo" className="rounded" />
+              </div>
               <span className="text-xl font-bold text-primary">Career Companion</span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -54,8 +58,8 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
@@ -71,8 +75,8 @@ const Footer = () => {
             <ul className="space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
@@ -99,7 +103,7 @@ const Footer = () => {
                 <span>New York, NY</span>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Newsletter</h4>
               <div className="flex space-x-2">
