@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import officeTeamImage from "@/assets/office-team.jpg";
 import officeMeetingImage from "@/assets/office-meeting.jpg";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -110,12 +111,17 @@ const Home = () => {
                   Empowering professionals with the tools, connections, and guidance needed to achieve career excellence and personal growth.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                  <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-white shadow-lg">
+                  <Link to={'/jobs'}>
+                    <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-white shadow-lg">
                     Find Jobs
                   </Button>
-                  <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-primary shadow-lg">
+                  </Link>
+                    <Link to={'/coaching'}>
+                    <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-primary shadow-lg">
                     Get Coaching
                   </Button>
+                    </Link>
+                  
                 </div>
               </div>
               <div className="relative fade-in-right">
@@ -160,9 +166,12 @@ const Home = () => {
               <p className="text-muted-foreground mb-8">
                 Our comprehensive approach combines cutting-edge technology with personalized human insight to ensure every career move is a step toward success.
               </p>
-              <Button variant="outline" size="lg">
+              <Link to={'/'}>
+               <Button variant="outline" size="lg">
                 Learn About Our Approach
               </Button>
+              </Link>
+             
             </div>
           </div>
         </section>

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import logo from '../../assets/logo/logo.jpeg'
+import logo from '../../assets/logo/logo2.jpeg'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +24,15 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded bg-muted">
-               <img src={`${logo}`} alt="logo" />
+            <div className="h-12 w-12 rounded bg-muted">
+               <img src={`${logo}`} alt="logo" className="rounded" />
             </div>
-            <span className="text-xl font-bold text-primary">Your Career Companion</span>
+            <div className="flex flex-col justify-center h-[0px] items-start">
+            <span className="text-xl font-bold text-primary">YoCaCo</span>
+            <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
+
+
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
