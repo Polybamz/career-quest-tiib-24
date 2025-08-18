@@ -35,7 +35,9 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/tiib" element={<TIIB />} />
               <Route path="/auth" element={<Register/>}/>
-              <Route path="/tiib/article/:id" element={<ArticlePage/>}/>
+              <Route path="/:type/article/:id" element={<ArticlePage/>}/>
+              <Route path="/:type/article/:id" element={<ArticlePage/>}/>
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

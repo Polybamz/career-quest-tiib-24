@@ -99,7 +99,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background flex pb-20 md:pb-0">
-      <div className="w-[200px]"></div>
+      <div className="w-[200px] hidden"></div>
 
       <div className="container mx-auto px-4">
                 <AdBanner width={1000} height={150} position="top" isHidden={true} />
@@ -125,8 +125,8 @@ const Home = () => {
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left fade-in-left">
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
-                  Your Career Companion – Where Careers Take Shape, and Integrity Opens Doors
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg">
+                  Where Careers Take Shape, and Integrity Opens Doors
                 </h1>
                 <p className="text-xl text-white/90 mb-8 drop-shadow-md">
                   We are more than just a job board – we are a career growth ecosystem committed to connecting ambitious job seekers with verified opportunities.
@@ -287,6 +287,29 @@ const Home = () => {
 
         {/* Testimonials */}
         <section className="py-16">
+  <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
+  <div className="relative w-full overflow-hidden">
+    <div className="flex w-fit animate-loop-scroll">
+      {testimonials.map((testimonial, index) => (
+        <Card key={index} className="flex-none w-80 mx-4 hover:shadow-lg transition-shadow">
+          <CardContent className="p-6">
+            <p className="text-sm italic mb-4">"{testimonial.content}"</p>
+            <div>
+              <p className="font-semibold text-sm">{testimonial.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {testimonial.role}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {testimonial.company}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
+        {/* <section className="py-16">
           <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
           <div className="max-w-6xl mx-auto fade-in-up">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -328,7 +351,7 @@ const Home = () => {
               </div>
             )}
           </div>
-        </section>
+        </section> */}
 
         {/* Newsletter Signup */}
         <section className="py-16">

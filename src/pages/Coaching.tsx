@@ -89,7 +89,7 @@ const Coaching = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Career Coaching & Resources</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Expert guidance and insights to help you navigate your career journey, 
+            Expert guidance and insights to help you navigate your career journey,
             develop new skills, and achieve your professional goals.
           </p>
         </div>
@@ -178,9 +178,11 @@ const Coaching = () => {
                     </Badge>
                   ))}
                 </div>
-                <Button variant="outline" className="w-full">
-                  Read Article
-                </Button>
+
+                <Link to={`/coaching/article/${post.id}`} className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Read Article                                    </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
