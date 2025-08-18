@@ -34,6 +34,8 @@ const Jobs = () => {
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+
+  
    useScrollAnimation();
   // --- Enriched Mock Job Data ---
   // Added logoUrl and postedDate for a more realistic and user-friendly experience
