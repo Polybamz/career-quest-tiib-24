@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, User, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Mail, Lock, User, Loader2, Building } from "lucide-react";
 import { 
   loginWithEmailAndPassword, 
   registerWithEmailAndPassword, 
   signInWithGoogle 
-} from "../../firebase"; // Corrected the import path again
+} from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 // A simple SVG for the Google icon
 const GoogleIcon = (props) => (
@@ -22,6 +26,8 @@ const GoogleIcon = (props) => (
 
 
 const AuthPage = () => {
+  const navigate = useNavigate();
+  
   // State to toggle between Login and Sign Up views
   const [isLoginView, setIsLoginView] = useState(true);
   
@@ -29,6 +35,7 @@ const AuthPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState<'jobseeker' | 'employer'>('jobseeker');
   
   // State for loading and error handling
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +50,9 @@ const AuthPage = () => {
     try {
       if (isLoginView) {
         // Handle Login
-        await loginWithEmailAndPassword(email, password);
-        // On success, you'll likely redirect the user.
-        // This is often handled by an auth state listener in a parent component (e.g., App.tsx)
+        const userCredential = await loginWithEmailAndPassword(email, password);
+        // Redirect based on user type (you might want to fetch this from Firestore)
+        navigate('/jobs'); // Default redirect
       } else {
         // Handle Registration
         if (!name) {
@@ -53,7 +60,20 @@ const AuthPage = () => {
           setIsLoading(false);
           return;
         }
-        await registerWithEmailAndPassword(name, email, password);
+        const userCredential = await registerWithEmailAndPassword(name, email, password);
+        
+        // Update user document with user type
+        const userRef = doc(db, 'users', userCredential.user.uid);
+        await updateDoc(userRef, {
+          userType: userType
+        });
+        
+        // Redirect based on user type
+        if (userType === 'employer') {
+          navigate('/employer-dashboard');
+        } else {
+          navigate('/jobs');
+        }
       }
     } catch (err: any) {
       // Map Firebase error codes to user-friendly messages
@@ -76,7 +96,22 @@ const AuthPage = () => {
     setIsLoading(true);
     setError(null);
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      
+      // Update user document with user type if it's a new registration
+      if (!isLoginView) {
+        const userRef = doc(db, 'users', result.user.uid);
+        await updateDoc(userRef, {
+          userType: userType
+        });
+      }
+      
+      // Redirect based on user type
+      if (userType === 'employer') {
+        navigate('/employer-dashboard');
+      } else {
+        navigate('/jobs');
+      }
     } catch (err) {
       setError("Failed to sign in with Google. Please try again.");
     } finally {
@@ -113,6 +148,32 @@ const AuthPage = () => {
                     className="pl-10"
                   />
                 </div>
+              </div>
+            )}
+
+            {/* User Type Selection - Only shown in Sign Up view */}
+            {!isLoginView && (
+              <div className="space-y-2">
+                <Label htmlFor="userType">I am a</Label>
+                <Select value={userType} onValueChange={(value: 'jobseeker' | 'employer') => setUserType(value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="jobseeker">
+                      <div className="flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        Job Seeker
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="employer">
+                      <div className="flex items-center">
+                        <Building className="mr-2 h-4 w-4" />
+                        Employer
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
             
