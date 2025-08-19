@@ -34,7 +34,7 @@ const Footer = () => {
               <div className="h-12 w-12 rounded bg-muted">
                 <img src={`${logo}`} alt="logo" className="rounded" />
               </div>
-              <span className="text-xl font-bold text-primary">Career Companion</span>
+              <span className="text-xl font-bold text-primary">Your Career Companion</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Empowering professionals with the tools, connections, and guidance needed to achieve career excellence.

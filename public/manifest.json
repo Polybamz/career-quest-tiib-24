@@ -1,6 +1,6 @@
 {
   "name": "Your Career Companion",
-  "short_name": "Career Companion",
+  "short_name": "YoCaCo",
   "description": "Your comprehensive career development platform with job opportunities, coaching, and employer solutions.",
   "start_url": "/",
   "display": "standalone",

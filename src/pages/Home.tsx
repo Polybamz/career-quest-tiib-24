@@ -9,6 +9,8 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import officeTeamImage from "@/assets/office-team.jpg";
 import officeMeetingImage from "@/assets/office-meeting.jpg";
 import { Link } from "react-router-dom";
+import { AnimatedNumber } from "@/components/ui/animate-number";
+import MailChimpSubscribe from "@/components/ui/mailChimp";
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -81,10 +83,10 @@ const Home = () => {
   ];
 
   const stats = [
-    { label: "People Helped", value: "10,000+" },
-    { label: "Job Placements", value: "5,000+" },
-    { label: "Partner Companies", value: "500+" },
-    { label: "Success Rate", value: "95%" }
+    { label: "People Helped", value: "5,000+" },
+    { label: "Job Placements", value: "00" },
+    { label: "Partner Companies", value: "10+" },
+    { label: "Success Rate", value: "75%" }
   ];
 
   const nextTestimonial = () => {
@@ -278,7 +280,9 @@ const Home = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center scale-in">
-                <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-4xl font-bold text-primary mb-2">
+                  <AnimatedNumber value={stat.value} />
+                </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
@@ -309,52 +313,11 @@ const Home = () => {
     </div>
   </div>
 </section>
-        {/* <section className="py-16">
-          <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
-          <div className="max-w-6xl mx-auto fade-in-up">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testimonials.slice(0, 3).map((testimonial, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <p className="text-sm italic mb-4">"{testimonial.content}"</p>
-                    <div>
-                      <p className="font-semibold text-sm">{testimonial.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.role}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.company}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            {testimonials.length > 3 && (
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
-                {testimonials.slice(3, 5).map((testimonial, index) => (
-                  <Card key={index + 3} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <p className="text-sm italic mb-4">"{testimonial.content}"</p>
-                      <div>
-                        <p className="font-semibold text-sm">{testimonial.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {testimonial.role}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {testimonial.company}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-        </section> */}
+        
 
         {/* Newsletter Signup */}
-        <section className="py-16">
+        <MailChimpSubscribe />
+        {/* <section className="py-16">
           <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center">
               <CardTitle>Stay Updated</CardTitle>
@@ -372,7 +335,7 @@ const Home = () => {
               </p>
             </CardContent>
           </Card>
-        </section>
+        </section> */}
 
         
       </div>
