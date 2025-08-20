@@ -3,11 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import logo from '../../assets/logo/logo2.jpeg'
+import logo from '../../assets/logo/logo2.jpeg';
+import { useAuth } from '@/hooks/useAuth';
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -50,9 +53,9 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+            {user ? (<Link to={'/employer-dashboard'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
               Sign In
-            </Link>
+            </Link>)}
           </nav>
 
           {/* Mobile Menu */}

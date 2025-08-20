@@ -13,18 +13,66 @@ import {
   doc,
   setDoc,
   getDoc,
-  serverTimestamp // <-- Import Firestore functions
+  serverTimestamp, // <-- Import Firestore functions
+  collection,
+  query,
+  getDocs,
+  where
 } from "firebase/firestore";
+
+// id: 1,
+//       title: "Senior Software Engineer",
+//       company: "TechCorp Inc.",
+//       logoUrl: "/placeholder.svg",
+//       location: "Lagos, Nigeria",
+//       type: "Full-time",
+//       description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
+//       postedDate: "2025-08-10T10:00:00Z",
+//       applyType: "external",
+//       applyLink: "https://techcorp.com/careers/senior-engineer",
+//       salary: "$8,000,000 - $12,000,000 Annually",
+//       tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
+
+interface Job {
+  id: string;
+  title: string;
+  company: string;
+  logoUrl:string;
+  location: string;
+  type: 'full-time' | 'part-time' | 'contract' | 'remote';
+  postedDate: string;
+  applyType: 'internal' | 'external';
+  salary: string;
+  tags: string[];
+  description: string;
+  requirements: string;
+  applyLink?: string; // Optional for internal applications
+  applyEmail?: string; // Optional for internal applications
+  expiryDate: string;
+  status: 'active' | 'closed';
+  createdAt: any;
+  employerId: string;
+}
+interface Blogs {
+  id:string;
+  title:string;
+  excerpt:string;
+  body: string;
+  author:string;
+  readTime:string;
+  catigory:string;
+  createdAt: any;
+}
 
 // TODO: Replace with your app's Firebase configuration from environment variables
 const firebaseConfig = {
-    apiKey: "AIzaSyAjFPm2FmvOTsD3gZDe-FfXHdOP4H7Fc4s",
-  authDomain: "career-companion-968d2.firebaseapp.com",
-  projectId: "career-companion-968d2",
-  storageBucket: "career-companion-968d2.firebasestorage.app",
-  messagingSenderId: "567547845140",
-  appId: "1:567547845140:web:397647821eb98ebe416501",
-  measurementId: "G-GSK1R40HJ2"
+  apiKey: "AIzaSyBR_3rky167nkSfAJGCgMl7i1Sho7F6928",
+  authDomain: "yocaco-fb6f3.firebaseapp.com",
+  projectId: "yocaco-fb6f3",
+  storageBucket: "yocaco-fb6f3.firebasestorage.app",
+  messagingSenderId: "787242461681",
+  appId: "1:787242461681:web:3010c0a5c9becdbc677c50",
+  measurementId: "G-R3YYMJ9F4R"
 };
 
 // Initialize Firebase
@@ -72,7 +120,7 @@ export const registerWithEmailAndPassword = async (name, email, password) => {
       savedJobs: [],
       profileComplete: false,
     });
-    
+
     return userCredential;
   } catch (error) {
     console.error("Error during registration:", error);
@@ -102,5 +150,37 @@ export const signInWithGoogle = async () => {
     throw error;
   }
 };
+/// get jobs
+export const getJobs = async () => {
+  try {
+    const jobsRef = collection(db, 'jobs');
+    const q = query(jobsRef, where('status', '==', 'active'));
+    const querySnapshot = await getDocs(q);
+    const jobsData = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Job[];
+    return jobsData
+  } catch (er) {
+    throw Error(er)
+  }
+}
+/// get article
+
+export const getAllArticls =()=>{
+  try{}catch (er){}
+}
+
+/// get coaching
+export const getAllCoaching =()=>{
+    try{}catch (er){}
+
+}
+
+/// get insights
+export const getAllInsight =()=>{
+    try{}catch (er){}
+
+}
 
 export default app; 

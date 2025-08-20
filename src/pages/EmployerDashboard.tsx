@@ -19,15 +19,19 @@ interface Job {
   id: string;
   title: string;
   company: string;
+  logoUrl: string;
   location: string;
   type: 'full-time' | 'part-time' | 'contract' | 'remote';
+  postedDate: string;
+  applyType: 'internal' | 'external' | 'email';
   salary: string;
+  tags: string[];
   description: string;
   requirements: string;
-  applicationEmail?: string;
-  applicationUrl?: string;
+  applyLink?: string;
+  applyEmail?: string;
   expiryDate: string;
-  status: 'active' | 'closed';
+  status: 'active' |'pendding' | 'closed';
   createdAt: any;
   employerId: string;
 }
@@ -40,17 +44,19 @@ const EmployerDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
 
-  // Form state
+  // Form state, updated to match Job interface
   const [formData, setFormData] = useState({
     title: '',
     company: '',
+    logoUrl: '', // New field
     location: '',
     type: 'full-time' as Job['type'],
     salary: '',
+    tags: '', // New field, will be converted to an array
     description: '',
     requirements: '',
-    applicationEmail: '',
-    applicationUrl: '',
+    applyEmail: '',
+    applyLink: '',
     expiryDate: '',
   });
 
@@ -90,22 +96,49 @@ const EmployerDashboard = () => {
     e.preventDefault();
     if (!user) return;
 
-    try {
-      const jobData = {
-        ...formData,
-        employerId: user.uid,
-        status: 'active' as const,
-        createdAt: serverTimestamp(),
-      };
+    // Determine applyType based on form data
+    let applyType: Job['applyType'] = 'internal';
+    if (formData.applyLink) {
+      applyType = 'external';
+    } else if (formData.applyEmail) {
+      applyType = 'email';
+    }
 
+    // Split tags string into an array
+    const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+
+    const commonJobData = {
+      title: formData.title,
+      company: formData.company,
+      logoUrl: formData.logoUrl,
+      location: formData.location,
+      type: formData.type,
+      salary: formData.salary,
+      tags: tagsArray,
+      description: formData.description,
+      requirements: formData.requirements,
+      applyType: applyType,
+      applyEmail: formData.applyEmail,
+      applyLink: formData.applyLink,
+      expiryDate: formData.expiryDate,
+      status: 'pending' as const,
+    };
+
+    try {
       if (editingJob) {
         const jobRef = doc(db, 'jobs', editingJob.id);
-        await updateDoc(jobRef, jobData);
+        await updateDoc(jobRef, { ...commonJobData });
         toast({
           title: "Success",
           description: "Job updated successfully",
         });
       } else {
+        const jobData = {
+          ...commonJobData,
+          employerId: user.uid,
+          createdAt: serverTimestamp(),
+          postedDate: new Date().toISOString(), // Add postedDate
+        };
         await addDoc(collection(db, 'jobs'), jobData);
         toast({
           title: "Success",
@@ -132,13 +165,15 @@ const EmployerDashboard = () => {
     setFormData({
       title: job.title,
       company: job.company,
+      logoUrl: job.logoUrl,
       location: job.location,
       type: job.type,
       salary: job.salary,
+      tags: job.tags.join(', '), // Convert array back to string
       description: job.description,
       requirements: job.requirements,
-      applicationEmail: job.applicationEmail || '',
-      applicationUrl: job.applicationUrl || '',
+      applyEmail: job.applyEmail || '',
+      applyLink: job.applyLink || '',
       expiryDate: job.expiryDate,
     });
     setIsDialogOpen(true);
@@ -166,13 +201,15 @@ const EmployerDashboard = () => {
     setFormData({
       title: '',
       company: '',
+      logoUrl: '',
       location: '',
       type: 'full-time',
       salary: '',
+      tags: '',
       description: '',
       requirements: '',
-      applicationEmail: '',
-      applicationUrl: '',
+      applyEmail: '',
+      applyLink: '',
       expiryDate: '',
     });
   };
@@ -268,6 +305,17 @@ const EmployerDashboard = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
+                      <Label htmlFor="logoUrl">Company Logo URL</Label>
+                      <Input
+                        id="logoUrl"
+                        type="url"
+                        value={formData.logoUrl}
+                        onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
+                        placeholder="https://company.com/logo.png"
+                        
+                      />
+                    </div>
+                    <div className="space-y-2">
                       <Label htmlFor="location">Location</Label>
                       <Input
                         id="location"
@@ -276,6 +324,9 @@ const EmployerDashboard = () => {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="type">Job Type</Label>
                       <Select value={formData.type} onValueChange={(value: Job['type']) => setFormData({...formData, type: value})}>
@@ -290,9 +341,6 @@ const EmployerDashboard = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="salary">Salary</Label>
                       <Input
@@ -300,6 +348,18 @@ const EmployerDashboard = () => {
                         value={formData.salary}
                         onChange={(e) => setFormData({...formData, salary: e.target.value})}
                         placeholder="e.g. $50,000 - $70,000"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="tags">Tags (comma-separated)</Label>
+                      <Input
+                        id="tags"
+                        value={formData.tags}
+                        onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                        placeholder="e.g., React, Node.js, AI, Remote"
                       />
                     </div>
                     <div className="space-y-2">
@@ -342,8 +402,8 @@ const EmployerDashboard = () => {
                       <Input
                         id="applicationEmail"
                         type="email"
-                        value={formData.applicationEmail}
-                        onChange={(e) => setFormData({...formData, applicationEmail: e.target.value})}
+                        value={formData.applyEmail}
+                        onChange={(e) => setFormData({...formData, applyEmail: e.target.value})}
                         placeholder="hr@company.com"
                       />
                     </div>
@@ -352,8 +412,8 @@ const EmployerDashboard = () => {
                       <Input
                         id="applicationUrl"
                         type="url"
-                        value={formData.applicationUrl}
-                        onChange={(e) => setFormData({...formData, applicationUrl: e.target.value})}
+                        value={formData.applyLink}
+                        onChange={(e) => setFormData({...formData, applyLink: e.target.value})}
                         placeholder="https://company.com/apply"
                       />
                     </div>

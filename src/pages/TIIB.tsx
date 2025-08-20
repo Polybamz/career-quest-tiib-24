@@ -1,10 +1,23 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import AdBanner from "@/components/layout/AdBanner";
 import { Link } from "react-router-dom";
 import { Target, Heart, Award, Users, BookOpen, Share2, Clock, User } from "lucide-react";
+import MailchimpSubscribe from "@/components/ui/mailChimp";
+
+
+interface Blogs {
+  id:string;
+  title:string;
+  excerpt:string;
+  body: string;
+  author:string;
+  readTime:string;
+  catigory:string;
+  createdAt: Date;
+
+}
 
 const TIIB = () => {
   const services = [
@@ -188,25 +201,8 @@ const TIIB = () => {
         </section>
 
         {/* Newsletter Signup */}
-        <section className="mb-16">
-          <Card className="max-w-2xl mx-auto text-center">
-            <CardHeader>
-              <CardTitle>Stay Updated with TIIB</CardTitle>
-              <CardDescription>
-                Get the latest research, insights, and updates on integrity building and ethical leadership.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
-                <Input placeholder="Enter your email address" className="flex-1" />
-                <Button>Subscribe</Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Join our community of ethical leaders and integrity champions.
-              </p>
-            </CardContent>
-          </Card>
-        </section>
+        <MailchimpSubscribe/>
+            
 
         {/* Contact Section */}
         <section className="mb-16">

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AdBanner from "@/components/layout/AdBanner";
 import { MapPin, Briefcase, DollarSign, ExternalLink, Mail, Search, Clock } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { getJobs } from "../../firebase";
 
 import { cn } from "@/lib/utils"; // Assuming you have a utility for class names
 
@@ -34,12 +35,27 @@ const Jobs = () => {
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-
+  const [jobs, setJobs] = useState([])
+const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
    useScrollAnimation();
+   const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
   // --- Enriched Mock Job Data ---
   // Added logoUrl and postedDate for a more realistic and user-friendly experience
-  const jobs = useMemo(() => [
+  useEffect(()=>{
+    try {
+      getJobs().then(res => {
+        console.log(res)
+        setJobs(res)
+      }).catch(er=>{
+        setError(er)
+      }).finally(()=> setIsLoading(false))
+    } catch (er) {
+      setError(er)
+    }
+  },[])
+  const jobsfff = useMemo(() => [
     {
       id: 1,
       title: "Senior Software Engineer",
@@ -208,9 +224,15 @@ const Jobs = () => {
       tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     }
   ], []);
-
+   if(!jobs || jobs.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-center">Loading Jobs...</h1>
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+      </div>
+    );}
   // --- Filtering Logic ---
-  const filteredJobs = useMemo(() => {
+  const filteredJobs = jobs ?? useMemo(() => {
     return jobs.filter(job => {
       const searchTermLower = searchTerm.toLowerCase();
       const locationLower = location.toLowerCase();
@@ -245,11 +267,12 @@ const Jobs = () => {
   };
 
   type Job = typeof jobs[0];
+  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',jobs)
 
   return (
-    <div className="min-h-screen bg-muted/20 w-full">
+    <div className="lg:min-h-screen bg-muted/20 w-full">
       {/* --- Top Banner Ad --- */}
-        <AdBanner width={970} height={90} position="top" isHidden={false}/>
+        <AdBanner width={screenWidth} height={160} position="top" isHidden={false}/>
     
 
       <div className="container mx-auto px-4 py-8">
@@ -297,9 +320,61 @@ const Jobs = () => {
             </div>
           </CardContent>
         </Card>
+      <div className="flex flex-col gap-4 lg:hidden">
+          {
+          filteredJobs.map((job, index)=>(
+             <Card key={index} className="sticky top-24 overflow-y-auto shadow-sm">
+                <CardHeader>
+                  <div className="flex gap-4 items-start">
+                    <img src={job.logoUrl} alt={`${job.company} logo`} className="h-16 w-16 rounded-lg bg-muted" />
+                    <div>
+                      <CardTitle className="text-2xl mb-1">{job.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {job.company} &middot; {job.location}
+                      </CardDescription>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Posted {timeAgo(job.postedDate)} &middot; <Badge variant="secondary">{job.type}</Badge>
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2 mb-6">
+                    <Button onClick={() => handleApply(job)} className="flex-1 h-11 text-base">
+                      {job.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2"/> : <Mail className="h-4 w-4 mr-2"/>}
+                      Apply Now
+                    </Button>
+                    <Button variant="outline" className="h-11">Save Job</Button>
+                  </div>
 
+                  <div className="space-y-6">
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
+                        <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{job.salary}</p>
+                     </div>
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Job Description</h4>
+                        <p className="text-muted-foreground whitespace-pre-line">{job.description}</p>
+                     </div>
+                     <div>
+                        <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {job.tags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="text-sm py-1 px-3">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+          ))
+        }
+
+      </div>
         {/* --- Main Content: Two-Column Layout --- */}
-        <main className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-lg:hidden">
           
           {/* --- Left Column: Job List --- */}
           <div className="lg:col-span-5 xl:col-span-4">
