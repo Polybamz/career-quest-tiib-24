@@ -53,7 +53,7 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            {user ? (<Link to={'/employer-dashboard'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+            {user ? (<Link to={user.userType !== 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
               Sign In
             </Link>)}
           </nav>

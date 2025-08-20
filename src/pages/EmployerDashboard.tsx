@@ -249,17 +249,7 @@ const EmployerDashboard = () => {
     );
   }
 
-  if (user.userType !== 'employer') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card>
-          <CardContent className="p-6">
-            <p>Access denied. This area is for employers only.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+ 
 
   return (
     <div className="container mx-auto px-4 py-8">
