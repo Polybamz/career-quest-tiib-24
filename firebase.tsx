@@ -49,7 +49,7 @@ interface Job {
   applyLink?: string; // Optional for internal applications
   applyEmail?: string; // Optional for internal applications
   expiryDate: string;
-  status: 'active' | 'closed';
+  status: 'active' | 'pending' | 'closed';
   createdAt: any;
   employerId: string;
 }
@@ -180,7 +180,91 @@ export const getAllCoaching =()=>{
 /// get insights
 export const getAllInsight =()=>{
     try{}catch (er){}
-
 }
+
+// Job Seeker Profile functions
+export const createJobSeekerProfile = async (uid: string, profileData: any) => {
+  try {
+    const profileRef = doc(db, 'jobSeekerProfiles', uid);
+    await setDoc(profileRef, {
+      ...profileData,
+      uid,
+      createdAt: serverTimestamp(),
+      profileComplete: true
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error creating job seeker profile:', error);
+    throw error;
+  }
+};
+
+export const getJobSeekerProfile = async (uid: string) => {
+  try {
+    const profileRef = doc(db, 'jobSeekerProfiles', uid);
+    const profileDoc = await getDoc(profileRef);
+    return profileDoc.exists() ? profileDoc.data() : null;
+  } catch (error) {
+    console.error('Error fetching job seeker profile:', error);
+    throw error;
+  }
+};
+
+// Analytics functions
+export const getJobAnalytics = async (employerId: string) => {
+  try {
+    const jobsRef = collection(db, 'jobs');
+    const q = query(jobsRef, where('employerId', '==', employerId));
+    const querySnapshot = await getDocs(q);
+    
+    const jobs = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Job[];
+
+    // Generate analytics data
+    const totalJobs = jobs.length;
+    const activeJobs = jobs.filter(job => job.status === 'active').length;
+    const pendingJobs = jobs.filter(job => job.status === 'pending').length;
+    const closedJobs = jobs.filter(job => job.status === 'closed').length;
+
+    // Monthly job postings (mock data for demo)
+    const monthlyData = [
+      { month: 'Jan', jobs: Math.floor(Math.random() * 10) + 1 },
+      { month: 'Feb', jobs: Math.floor(Math.random() * 10) + 1 },
+      { month: 'Mar', jobs: Math.floor(Math.random() * 10) + 1 },
+      { month: 'Apr', jobs: Math.floor(Math.random() * 10) + 1 },
+      { month: 'May', jobs: Math.floor(Math.random() * 10) + 1 },
+      { month: 'Jun', jobs: totalJobs },
+    ];
+
+    // Job type distribution
+    const jobTypes = jobs.reduce((acc, job) => {
+      acc[job.type] = (acc[job.type] || 0) + 1;
+      return acc;
+    }, {});
+
+    const typeData = Object.entries(jobTypes).map(([type, count]) => ({
+      type: type.replace('-', ' '),
+      count,
+    }));
+
+    return {
+      totalJobs,
+      activeJobs,
+      pendingJobs,
+      closedJobs,
+      monthlyData,
+      typeData,
+      applicationStats: {
+        totalApplications: totalJobs * Math.floor(Math.random() * 50) + 10,
+        averagePerJob: Math.floor(Math.random() * 25) + 5,
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching analytics:', error);
+    throw error;
+  }
+};
 
 export default app; 

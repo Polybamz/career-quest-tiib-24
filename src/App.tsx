@@ -17,6 +17,8 @@ import MobileNav from "./components/layout/MobileNav";
 import Register from "./pages/Register";
 import ArticlePage from "./pages/Article";
 import EmployerDashboard from "./pages/EmployerDashboard";
+import JobSeekerProfile from "./pages/JobSeekerProfile";
+import JobSeekerPortal from "./pages/JobSeekerPortal";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
                 <Route path="/tiib" element={<TIIB />} />
                 <Route path="/auth" element={<Register/>}/>
                 <Route path="/employer-dashboard" element={<EmployerDashboard/>}/>
+                <Route path="/job-seeker-profile" element={<JobSeekerProfile/>}/>
+                <Route path="/job-seeker-portal" element={<JobSeekerPortal/>}/>
                 <Route path="/:type/article/:id" element={<ArticlePage/>}/>
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

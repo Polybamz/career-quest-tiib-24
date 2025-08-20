@@ -10,8 +10,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Edit, Trash2, MapPin, Calendar, DollarSign, Building } from 'lucide-react';
-import { db } from '../../firebase';
+import { Plus, Edit, Trash2, MapPin, Calendar, DollarSign, Building, BarChart3, TrendingUp, Users, Eye } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { db, getJobAnalytics } from '../../firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,7 +32,7 @@ interface Job {
   applyLink?: string;
   applyEmail?: string;
   expiryDate: string;
-  status: 'active' |'pendding' | 'closed';
+  status: 'active' |'pending' | 'closed';
   createdAt: any;
   employerId: string;
 }
@@ -43,6 +44,8 @@ const EmployerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   // Form state, updated to match Job interface
   const [formData, setFormData] = useState({
@@ -63,6 +66,7 @@ const EmployerDashboard = () => {
   useEffect(() => {
     if (user) {
       fetchJobs();
+      fetchAnalytics();
     }
   }, [user]);
 
@@ -89,6 +93,19 @@ const EmployerDashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    if (!user) return;
+    
+    try {
+      const analyticsData = await getJobAnalytics(user.uid);
+      setAnalytics(analyticsData);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setAnalyticsLoading(false);
     }
   };
 
@@ -282,6 +299,7 @@ const EmployerDashboard = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="title">Job Title</Label>
@@ -517,39 +535,141 @@ const EmployerDashboard = () => {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {analyticsLoading ? (
+            <div className="text-center py-8">Loading analytics...</div>
+          ) : analytics ? (
+            <>
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Total Jobs</p>
+                        <p className="text-3xl font-bold">{analytics.totalJobs}</p>
+                      </div>
+                      <Building className="h-8 w-8 text-primary" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Active Jobs</p>
+                        <p className="text-3xl font-bold text-primary">{analytics.activeJobs}</p>
+                      </div>
+                      <TrendingUp className="h-8 w-8 text-primary" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Total Applications</p>
+                        <p className="text-3xl font-bold text-secondary">{analytics.applicationStats.totalApplications}</p>
+                      </div>
+                      <Users className="h-8 w-8 text-secondary" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Avg per Job</p>
+                        <p className="text-3xl font-bold text-accent">{analytics.applicationStats.averagePerJob}</p>
+                      </div>
+                      <BarChart3 className="h-8 w-8 text-accent" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Monthly Job Postings</CardTitle>
+                    <CardDescription>Number of jobs posted each month</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={analytics.monthlyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="jobs" fill="hsl(var(--primary))" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Job Types Distribution</CardTitle>
+                    <CardDescription>Breakdown of job types posted</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={analytics.typeData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ type, count }) => `${type}: ${count}`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="count"
+                        >
+                          {analytics.typeData.map((entry: any, index: number) => (
+                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? 'hsl(var(--primary))' : 'hsl(var(--secondary))'} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
+
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Job Status Overview</CardTitle>
+                  <CardDescription>Current status of all your job postings</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center p-4 bg-primary/10 rounded-lg">
+                      <p className="text-2xl font-bold text-primary">{analytics.activeJobs}</p>
+                      <p className="text-sm text-muted-foreground">Active Jobs</p>
+                    </div>
+                    <div className="text-center p-4 bg-secondary/10 rounded-lg">
+                      <p className="text-2xl font-bold text-secondary">{analytics.pendingJobs}</p>
+                      <p className="text-sm text-muted-foreground">Pending Jobs</p>
+                    </div>
+                    <div className="text-center p-4 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold text-muted-foreground">{analytics.closedJobs}</p>
+                      <p className="text-sm text-muted-foreground">Closed Jobs</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          ) : (
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Jobs</CardTitle>
-                <Building className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{jobs.length}</div>
+              <CardContent className="p-6">
+                <p>No analytics data available.</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {jobs.filter(job => job.status === 'active').length}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Closed Jobs</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {jobs.filter(job => job.status === 'closed').length}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

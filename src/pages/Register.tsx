@@ -8,11 +8,12 @@ import { Mail, Lock, User, Loader2, Building } from "lucide-react";
 import { 
   loginWithEmailAndPassword, 
   registerWithEmailAndPassword, 
-  signInWithGoogle 
+  signInWithGoogle,
+  db
 } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { useToast } from '@/hooks/use-toast';
 
 // A simple SVG for the Google icon
 const GoogleIcon = (props) => (
@@ -27,6 +28,7 @@ const GoogleIcon = (props) => (
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   // State to toggle between Login and Sign Up views
   const [isLoginView, setIsLoginView] = useState(true);
@@ -50,9 +52,30 @@ const AuthPage = () => {
     try {
       if (isLoginView) {
         // Handle Login
-        const userCredential = await loginWithEmailAndPassword(email, password);
-        // Redirect based on user type (you might want to fetch this from Firestore)
-        navigate('/jobs'); // Default redirect
+        const result = await loginWithEmailAndPassword(email, password);
+        if (result.user) {
+          toast({
+            title: "Login successful!",
+            description: "Welcome back!",
+          });
+          
+          // Get user data to determine redirect
+          const userRef = doc(db, 'users', result.user.uid);
+          const userDoc = await getDoc(userRef);
+          
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.userType === 'jobseeker') {
+              if (userData.profileComplete) {
+                navigate('/job-seeker-portal');
+              } else {
+                navigate('/job-seeker-profile');
+              }
+            } else {
+              navigate('/employer-dashboard');
+            }
+          }
+        }
       } else {
         // Handle Registration
         if (!name) {
@@ -68,11 +91,16 @@ const AuthPage = () => {
           userType: userType
         });
         
-        // Redirect based on user type
-        if (userType === 'employer') {
-          navigate('/employer-dashboard');
+        toast({
+          title: "Registration successful!",
+          description: "Welcome to Your Career Companion",
+        });
+        
+        // Redirect based on user type after successful registration
+        if (userType === 'jobseeker') {
+          navigate('/job-seeker-profile');
         } else {
-          navigate('/jobs');
+          navigate('/employer-dashboard');
         }
       }
     } catch (err: any) {
