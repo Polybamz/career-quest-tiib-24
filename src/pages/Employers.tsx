@@ -246,7 +246,7 @@ const Employers = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="text-lg px-8">
                   <Briefcase className="h-5 w-5 mr-2" />
-                  Start Hiring Today
+                  Start Hiring
                 </Button>
                 <Button variant="outline" size="lg" className="text-lg px-8">
                   Schedule a Demo
