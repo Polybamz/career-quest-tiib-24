@@ -4,12 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdBanner from "@/components/layout/AdBanner";
 import { Check, Users, Target, Award, TrendingUp, Building2, Briefcase } from "lucide-react";
+import { AnimatedNumber } from "@/components/ui/animate-number";
+
 
 const Employers = () => {
   const pricingPlans = [
     {
       name: "Starter",
-      price: "₦50,000",
+      price: "$50,000",
       period: "per month",
       description: "Perfect for small businesses and startups",
       features: [
@@ -23,7 +25,7 @@ const Employers = () => {
     },
     {
       name: "Professional",
-      price: "₦150,000",
+      price: "$150,000",
       period: "per month",
       description: "Ideal for growing companies",
       features: [
@@ -39,7 +41,7 @@ const Employers = () => {
     },
     {
       name: "Enterprise",
-      price: "₦300,000",
+      price: "$300,000",
       period: "per month",
       description: "For large organizations with high-volume hiring",
       features: [
@@ -129,7 +131,7 @@ const Employers = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-primary/5 rounded-2xl p-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-3xl font-bold text-primary mb-2"> <AnimatedNumber value={stat.value} /></div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
@@ -204,7 +206,7 @@ const Employers = () => {
                       <CardTitle className="text-2xl">{plan.name}</CardTitle>
                       <CardDescription>{plan.description}</CardDescription>
                       <div className="mt-4">
-                        <span className="text-4xl font-bold">₦{yearlyPrice.toLocaleString()}</span>
+                        <span className="text-4xl font-bold">${yearlyPrice.toLocaleString()}</span>
                         <span className="text-muted-foreground">/year</span>
                         <div className="text-sm text-primary">Save 20%</div>
                       </div>

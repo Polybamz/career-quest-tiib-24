@@ -4,6 +4,8 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from '../../assets/logo/logo2.jpeg';
+import tiiblogo from "@/assets/logo/tiib-logo.png";
+
 import { useAuth } from '@/hooks/useAuth';
 
 
@@ -28,11 +30,27 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="h-12 w-12 rounded bg-muted">
-               <img src={`${logo}`} alt="logo" className="rounded" />
+              {location.pathname == '/tiib' &&
+                (
+                 <img src={`${tiiblogo}`} alt="TIIB logo" className="rounded" />
+                )
+              }
+              {location.pathname !== '/tiib' && (
+                <img src={`${logo}`} alt="logo" className="rounded" />
+                ) }
             </div>
             <div className="flex flex-col justify-center h-[0px] items-start">
-            <span className="text-xl font-bold text-primary">YoCaCo</span>
-            <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
+              { location.pathname == '/tiib' ? (
+                   <span className="text-xl font-bold text-blue-400">TIIB</span>
+              ) : (
+                 <span className="text-xl font-bold text-primary">YoCaCo</span>
+              )}
+             
+              { location.pathname == '/tiib' ? (
+              <span className=" font-[400] text-[12px] text-blue-400">The International Institute of Business</span>
+              ) : (
+              <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
+              )}
 
 
             </div>
@@ -44,16 +62,15 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  location.pathname === item.href
+                className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname == '/tiib' ? 'text-blue-400' : location.pathname === item.href
                     ? "text-primary"
                     : "text-muted-foreground"
-                }`}
+                  }`}
               >
                 {item.name}
               </Link>
             ))}
-            {user ? (<Link to={user.userType !== 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+            {user ? (<Link to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
               Sign In
             </Link>)}
           </nav>
@@ -73,20 +90,19 @@ const Header = () => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      location.pathname === item.href
+                    className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-blue-400'} ${location.pathname === item.href
                         ? "text-primary"
                         : "text-muted-foreground"
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
                 ))}
-                
-              <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary">
-              Sign In
-            </Link>
-            </div>
+
+                <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary">
+                  Sign In
+                </Link>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

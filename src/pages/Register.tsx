@@ -14,6 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from "@/hooks/useAuth";
 
 // A simple SVG for the Google icon
 const GoogleIcon = (props) => (
@@ -42,7 +43,7 @@ const AuthPage = () => {
   // State for loading and error handling
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const { user } = useAuth();
   // Handles the form submission for both login and registration
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +139,11 @@ const AuthPage = () => {
       if (userType === 'employer') {
         navigate('/employer-dashboard');
       } else {
-        navigate('/jobs');
+         if(user && !user.profileComplete){
+          navigate('/job-seeker-profile');
+         } else {
+        navigate('/job-seeker-portal');
+         }
       }
     } catch (err) {
       setError("Failed to sign in with Google. Please try again.");

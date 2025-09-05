@@ -224,13 +224,13 @@ const [isLoading, setIsLoading] = useState(true);
       tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
     }
   ], []);
-   if(!jobs || jobs.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-center">Loading Jobs...</h1>
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-      </div>
-    );}
+  //  if(!jobs || jobs.length === 0) {
+  //   return (
+  //     <div className="container mx-auto px-4 py-8">
+  //       <h1 className="text-2xl font-bold text-center">Loading Jobs...</h1>
+  //       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+  //     </div>
+  //   );}
   // --- Filtering Logic ---
   const filteredJobs = jobs ?? useMemo(() => {
     return jobs.filter(job => {

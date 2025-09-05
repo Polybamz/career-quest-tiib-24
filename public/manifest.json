@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/placeholder.svg",
+      "src": "/logo2.jpeg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/placeholder.svg",
+      "src": "/logo2.jpeg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -30,7 +30,7 @@
       "url": "/jobs",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/logo2.jpeg",
           "sizes": "96x96"
         }
       ]
@@ -42,7 +42,7 @@
       "url": "/coaching",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/logo2.jpeg",
           "sizes": "96x96"
         }
       ]

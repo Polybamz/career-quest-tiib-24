@@ -11,6 +11,7 @@ import officeMeetingImage from "@/assets/office-meeting.jpg";
 import { Link } from "react-router-dom";
 import { AnimatedNumber } from "@/components/ui/animate-number";
 import MailChimpSubscribe from "@/components/ui/mailChimp";
+import AnimatedCard from "@/components/layout/AnimatedCard";
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -84,7 +85,7 @@ const Home = () => {
 
   const stats = [
     { label: "People Helped", value: "5,000+" },
-    { label: "Job Placements", value: "00" },
+    { label: "Job Placements", value: "5,000+" },
     { label: "Partner Companies", value: "10+" },
     { label: "Success Rate", value: "75%" }
   ];
@@ -100,24 +101,28 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex pb-20 md:pb-0">
-      <div className="w-[200px] hidden"></div>
+    <div className="bg-background w-full flex pb-20 md:pb-0">
+      {/* <div className="w-full h-[100px] bg-red-200 ">
+        sgdgxfdxjfdchmgc,gfhvhj
+      </div> */}
 
-      <div className="container mx-auto px-4">
-                <AdBanner width={1000} height={150} position="top" isHidden={true} />
-
-        <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-[5]">
-          <AdBanner width={160} height={400} position="side" isHidden={true} />
+      <div className="w-full">
+        <div className="flex w-full justify-center items-center gap-12">
+          <AdBanner width={1080} height={90} position="top" isHidden={true} />
+        </div>
+        <div className="hidden lg:block fixed  left-4 top-1/2 transform -translate-y-1/2 z-[5]">
+          <AdBanner width={160} height={600} position="side" isHidden={true} />
         </div>
         <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-[5]">
           <AdBanner width={160} height={400} position="side" isHidden={true} />
         </div>
 
         {/* Hero Section */}
+
         <section 
           className="py-20 relative overflow-hidden"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${officeTeamImage})`,
+            backgroundImage: `linear-gradient(rgba(51, 31, 31, 0.4), rgba(0, 0, 0, 0.6)), url(${officeTeamImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
@@ -127,8 +132,8 @@ const Home = () => {
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left fade-in-left">
-                <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg">
-                  Where Careers Take Shape, and Integrity Opens Doors
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
+                  Where Careers Take Shape, and Integrity Opens Doors 
                 </h1>
                 <p className="text-xl text-white/90 mb-8 drop-shadow-md">
                   We are more than just a job board – we are a career growth ecosystem committed to connecting ambitious job seekers with verified opportunities.
@@ -172,7 +177,7 @@ const Home = () => {
         </section>
 
         {/* Corporate Vision Section */}
-        <section className="py-16">
+        <section className="py-16 px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-first fade-in-left">
               <img 
@@ -200,7 +205,7 @@ const Home = () => {
         </section>
 
         {/* Mission, Vision, Values */}
-        <section className="py-16">
+        <section className="py-16 px-4">
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center scale-in">
               <CardHeader>
@@ -224,7 +229,8 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className=" scale-in max-h-[400px] overflow-scroll">
+            <AnimatedCard/>
+            {/* <Card className=" scale-in max-h-[400px] overflow-scroll">
               <CardHeader>
                 <Award className="h-12 w-12 text-accent mx-auto mb-4" />
                 <CardTitle className="text-center">Values</CardTitle>
@@ -249,12 +255,12 @@ const Home = () => {
                   <strong>Availability – </strong> We are known for our ever-present nature, always ready to respond to you and provide assistance when you need it.
                 </p>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </section>
 
         {/* Services Overview */}
-        <section className="py-16">
+        <section className="py-16 px-4">
           <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">Our Services</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, index) => {
@@ -275,7 +281,7 @@ const Home = () => {
         </section>
 
         {/* Statistics */}
-        <section className="py-16 bg-primary/5 rounded-2xl fade-in-up">
+        <section className="py-16 bg-primary/5 rounded-2xl fade-in-up ">
           <h2 className="text-3xl font-bold text-center mb-12">Our Impact</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -339,6 +345,8 @@ const Home = () => {
 
         
       </div>
+      {/* <div className="w-full h-[100px] bg-red-200 ">zsgjjrdsjrdjytdfjty</div> */}
+
     </div>
   );
 };
