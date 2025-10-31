@@ -47,7 +47,8 @@ const Header = () => {
               )}
              
               { location.pathname == '/tiib' ? (
-              <span className=" font-[400] text-[12px] text-blue-400">The International Institute of Business</span>
+              <span className=" font-[400] text-[12px] text-blue-400">The Institute of Integrity Building
+</span>
               ) : (
               <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
               )}

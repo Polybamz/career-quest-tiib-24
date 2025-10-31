@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import logo from '../../assets/logo/logo2.jpeg'
+import { useLocation } from "react-router-dom";
 
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
 
   const quickLinks = [
     { name: "Home", href: "/" },
@@ -24,8 +26,10 @@ const Footer = () => {
     { name: "FAQ", href: "/faq" }
   ];
 
+
+
   return (
-    <footer className="hidden md:block bg-muted z-100 border-t">
+    <footer className={`hidden  bg-muted z-100 border-t ${location.pathname == 'employer-dashboard' ? 'hidden  ' : 'md:block'}`}>
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

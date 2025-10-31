@@ -9,6 +9,8 @@ const MobileNav = () => {
     { name: "Jobs", href: "/jobs", icon: Briefcase },
     { name: "Coaching", href: "/coaching", icon: GraduationCap },
     { name: "Employers", href: "/employers", icon: Building2 },
+    //{ name: "TIIB", href: "/tiib" },
+
     { name: "Contact", href: "/contact", icon: Phone },
   ];
 

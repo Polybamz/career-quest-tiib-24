@@ -1,61 +1,147 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect, useMemo } from "react";
+import { X } from "lucide-react";
+import useContent from "@/hooks/useContent";
 
-interface AdBannerProps {
-  width: number;
-  height: number;
-  position: "top" | "side" | "inline";
-  className?: string;
-  isHidden?: boolean;
+// =========================
+// 🔹 TYPES (UNCHANGED)
+// =========================
+interface BannerData {
+    id: string;
+    imageUrl: string;
+    linkUrl: string;
+    altText: string;
+    displayOrder: "top" | "side" | "inline";
 }
 
-const AdBanner = ({ width, height, position, className = "", isHidden = true }: AdBannerProps) => {
-  const [isDismissed, setIsDismissed] = useState(false);
-  const [showAfterDelay, setShowAfterDelay] = useState(false);
+interface AdBannerProps {
+    position: 'top' | 'side' | 'inline';
+    className?: string;
+}
 
-  useEffect(() => {
-    if (position === 'side' && !isHidden) {
-      const timer = setTimeout(() => {
-        setShowAfterDelay(true);
-      }, 3000); // Show after 3 seconds of browsing
+// =========================
+// 🔹 HELPERS (UNCHANGED)
+// =========================
+const getAdDimensions = (position: AdBannerProps['position']) => {
+    // get width and height based on position
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const map = {
+        top: { width: screenWidth, height: 150 },
+        side: { width: 160, height: screenHeight * 0.8 },
+        inline: { width: 468, height: 60 },
+    };
+    return map[position] ?? { width: 400, height: 100 };
+};
 
-      return () => clearTimeout(timer);
+
+// =========================
+// 🔹 MAIN COMPONENT (FIXED HOOK ORDER)
+// =========================
+const AdBanner: React.FC<AdBannerProps> = ({ position, className = '' }) => {
+    // 1. CALL ALL HOOKS FIRST (Unconditional)
+    const [index, setIndex] = useState(0);
+    const [dismissed, setDismissed] = useState(false);
+    const [visible, setVisible] = useState(position !== 'side');
+    const { bannerState } = useContent();
+    const { width, height } = getAdDimensions(position); // Note: This helper is NOT a hook, so its position doesn't strictly matter, but keeping it high is clean.
+    
+    const banners = useMemo(() => {
+        const data = bannerState?.data ?? [];
+        return data.filter((b) => b.displayOrder === position);
+    }, [position, bannerState]);
+
+    const current = banners[index];
+    const multiple = banners.length > 1;
+
+    // Delay for side banners (Hook 5)
+    useEffect(() => {
+        if (position === 'side' && !visible) {
+            const timer = setTimeout(() => setVisible(true), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [position, visible]);
+
+    // Auto rotate banners (Hook 6)
+    useEffect(() => {
+        if (!multiple) return;
+        const interval = setInterval(
+            () => setIndex((prev) => (prev + 1) % banners.length),
+            5000
+        );
+        return () => clearInterval(interval);
+    }, [multiple, banners.length]);
+
+
+    // 2. NOW, USE CONDITIONAL RENDERING (Return early)
+
+    // Show loading skeleton while data is fetching
+    if (bannerState.loading) {
+        return (<div className="animate-pulse bg-gray-200 rounded-[2px]" style={{ width, height }} />);
     }
-  }, [position, isHidden]);
 
-  if (isDismissed || (position === 'side' && !showAfterDelay && !isHidden)) {
-    return null;
-  }
+    // Hide if dismissed, not visible (due to delay), or if no banners exist for this position
+    if (dismissed || !visible || banners.length === 0) {
+        // Use 'null' instead of <></> or <div className="hidden" /> for cleaner component removal
+        return null;
+    }
+    
+    // The previous conditional check for banners.length == 0 is redundant here
+    // because it was already handled at the top, and if it wasn't handled, it
+    // would mean 'banners' is guaranteed to be an array and have elements.
 
-  if (isHidden) {
-    return null;
-  }
-
-  return (
-    <div 
-      className={`bg-muted border border-border rounded-lg flex items-center justify-center relative ${className}`}
-      style={{ width: `${width}px`, height: `${height}px` }}
-    >
-      {position === 'side' && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-1 right-1 h-6 w-6"
-          onClick={() => setIsDismissed(true)}
+    return (
+        <div
+            className={` shadow-lg overflow-hidden rounded-[2px] transition-all duration-300 ${className}`}
+            style={{ width, height }}
         >
-          <X className="h-3 w-3" />
-        </Button>
-      )}
-      <div className="text-center text-muted-foreground">
-        <div className="text-sm font-medium">
-          {position === 'side' ? 'Sell your services/products here' : 'Advertisement'}
+            <style>{`
+                @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+            `}</style>
+
+            <a
+                href={current.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full h-full relative"
+            >
+                <img
+                    key={current.id}
+                    src={current.imageUrl}
+                    alt={current.altText || 'Advertisement'}
+                    className="w-full h-full object-cover rounded-[2px] transition-opacity duration-700"
+                    style={{ animation: 'fade-in 0.7s forwards' }}
+                    onError={(e) => {
+                        e.currentTarget.src = `https://placehold.co/${width}x${height}/ef4444/ffffff?text=Ad+Load+Error`;
+                    }}
+                />
+
+                {/* Dots indicator */}
+                {multiple && (
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-black/40 p-1 rounded-full">
+                        {banners.map((_, i) => (
+                            <div
+                                key={i}
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                    i === index ? 'bg-white' : 'bg-gray-400'
+                                }`}
+                            />
+                        ))}
+                    </div>
+                )}
+            </a>
+
+            {/* Close button for top/side ads */}
+            {['side', 'top'].includes(position) && (
+                <button
+                    onClick={() => setDismissed(true)}
+                    className="absolute top-1 right-1 bg-black/40 text-white rounded-full p-1 hover:bg-black/60 transition"
+                    aria-label="Close Ad"
+                >
+                    <X size={16} />
+                </button>
+            )}
         </div>
-        <div className="text-xs">{width} x {height}</div>
-        <div className="text-xs capitalize">{position} Placement</div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AdBanner;

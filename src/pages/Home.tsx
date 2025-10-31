@@ -1,22 +1,43 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AdBanner from "@/components/layout/AdBanner";
-import { Users, Target, Award, Briefcase, GraduationCap, Building2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Target, Award, Briefcase, GraduationCap, Building2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import officeTeamImage from "@/assets/office-team.jpg";
-import officeMeetingImage from "@/assets/office-meeting.jpg";
 import { Link } from "react-router-dom";
 import { AnimatedNumber } from "@/components/ui/animate-number";
 import MailChimpSubscribe from "@/components/ui/mailChimp";
 import AnimatedCard from "@/components/layout/AnimatedCard";
+import m1 from "@/assets/yococa-ent/m1.jpeg";
+import m2 from "@/assets/yococa-ent/m2.jpeg";
+import m3 from "@/assets/yococa-ent/m3.jpeg";
+import m4 from "@/assets/yococa-ent/m4.jpeg";
+import m5 from "@/assets/yococa-ent/m5.jpeg";
+import m6 from "@/assets/yococa-ent/m6.jpeg";
+import m7 from "@/assets/yococa-ent/m7.jpeg";
+import m8 from "@/assets/yococa-ent/m8.jpeg";
+import m9 from "@/assets/yococa-ent/m9.jpeg";
+import m10 from "@/assets/yococa-ent/m10.jpeg";
+import m11 from "@/assets/yococa-ent/m11.jpeg";
+import m12 from "@/assets/yococa-ent/m12.jpeg";
+import useContent from "@/hooks/useContent";
+import ImageGrid from "@/components/ui/image_grid";
+
+
+const yococaEnt = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12];
 
 const Home = () => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  useScrollAnimation();
 
+  const [scrollY, setScrollY] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const { getTestimonialsState } = useContent();
+  useScrollAnimation();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSelectedImage((prev) => (prev + 1) % yococaEnt.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   const services = [
     {
       icon: Briefcase,
@@ -50,7 +71,7 @@ const Home = () => {
     }
   ];
 
-  const testimonials = [
+  const testimonials = getTestimonialsState.data || [
     {
       name: "A satisfied client",
       role: "International Development Policy Specialist",
@@ -90,39 +111,37 @@ const Home = () => {
     { label: "Success Rate", value: "75%" }
   ];
 
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-  };
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
 
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  // Function to update the state on scroll
+  const handleScroll = () => {
+    setScrollY(window.scrollY);
   };
 
-  return (
-    <div className="bg-background w-full flex pb-20 md:pb-0">
-      {/* <div className="w-full h-[100px] bg-red-200 ">
-        sgdgxfdxjfdchmgc,gfhvhj
+  useEffect(() => {
+    // 1. Attach the event listener when the component mounts
+    window.addEventListener('scroll', handleScroll);
+
+    // 2. Clean up the event listener when the component unmounts
+    // This prevents memory leaks and unintended behavior.
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  return <div className="min-h-screen flex-col">
+    <div className=" w-full ">
+      <AdBanner position="top" />
+    </div>
+    <div className="flex justify-center items-start w-full">
+      {/* <div className={` border-2 min-h-[70vh] max-lg:hidden ${scrollY > 100 ? 'animate-slide-in-left fixed left-0 top-50 bottom-0 z-10' : 'animate-slide-out-left'}`}>
+        <AdBanner position="side" />
       </div> */}
-
-      <div className="w-full">
-        <div className="flex w-full justify-center items-center gap-12">
-          <AdBanner width={1080} height={90} position="top" isHidden={true} />
-        </div>
-        <div className="hidden lg:block fixed  left-4 top-1/2 transform -translate-y-1/2 z-[5]">
-          <AdBanner width={160} height={600} position="side" isHidden={true} />
-        </div>
-        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-[5]">
-          <AdBanner width={160} height={400} position="side" isHidden={true} />
-        </div>
-
-        {/* Hero Section */}
-
-        <section 
+      <div className="w-full  border-white min-h-screen">
+        {/* hero section */}
+        <section
           className="py-20 relative overflow-hidden"
           style={{
-            backgroundImage: `linear-gradient(rgba(51, 31, 31, 0.4), rgba(0, 0, 0, 0.6)), url(${officeTeamImage})`,
+            backgroundImage: `linear-gradient(rgba(51, 31, 31, 0.4), rgba(0, 0, 0, 0.6)), url(${yococaEnt[selectedImage]})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
@@ -133,7 +152,7 @@ const Home = () => {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left fade-in-left">
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
-                  Where Careers Take Shape, and Integrity Opens Doors 
+                  Where Careers Take Shape, and Integrity Opens Doors
                 </h1>
                 <p className="text-xl text-white/90 mb-8 drop-shadow-md">
                   We are more than just a job board – we are a career growth ecosystem committed to connecting ambitious job seekers with verified opportunities.
@@ -141,15 +160,15 @@ const Home = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <Link to={'/jobs'}>
                     <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-white shadow-lg">
-                    Find Jobs
-                  </Button>
+                      Find Jobs
+                    </Button>
                   </Link>
-                    <Link to={'/coaching'}>
+                  <Link to={'/coaching'}>
                     <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-primary shadow-lg">
-                    Get Coaching
-                  </Button>
-                    </Link>
-                  
+                      Get Coaching
+                    </Button>
+                  </Link>
+
                 </div>
               </div>
               <div className="relative fade-in-right">
@@ -175,14 +194,16 @@ const Home = () => {
             </div>
           </div>
         </section>
+        {/* ///// */}
+        {/* <ImageGrid images={yococaEnt}/> */}
 
         {/* Corporate Vision Section */}
         <section className="py-16 px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-first fade-in-left">
-              <img 
-                src={officeMeetingImage} 
-                alt="Corporate meeting with professionals discussing strategy" 
+              <img
+                src={yococaEnt[selectedImage]}
+                alt="Corporate meeting with professionals discussing strategy"
                 className="rounded-lg shadow-lg w-full h-auto"
               />
             </div>
@@ -195,11 +216,11 @@ const Home = () => {
                 Our comprehensive approach combines cutting-edge technology with personalized human insight to ensure every career move is a step toward success.
               </p>
               <Link to={'/'}>
-               <Button variant="outline" size="lg">
-                Learn About Our Approach
-              </Button>
+                <Button variant="outline" size="lg">
+                  Learn About Our Approach
+                </Button>
               </Link>
-             
+
             </div>
           </div>
         </section>
@@ -209,9 +230,13 @@ const Home = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center scale-in">
               <CardHeader>
+
                 <Target className="h-12 w-12 text-primary mx-auto mb-4" />
+
                 <CardTitle>Mission</CardTitle>
+
               </CardHeader>
+
               <CardContent>
                 <p className="text-muted-foreground">
                   To empower job seekers and professionals with integrity and excellence by providing trusted recruitment solutions, world-class career services and personalized coaching that open doors to national and international opportunities.
@@ -229,33 +254,9 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-            <AnimatedCard/>
-            {/* <Card className=" scale-in max-h-[400px] overflow-scroll">
-              <CardHeader>
-                <Award className="h-12 w-12 text-accent mx-auto mb-4" />
-                <CardTitle className="text-center">Values</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-start">
-                  <strong>Integrity – </strong> We stay true to honesty and transparency in all we do.
-                </p>
-                <p className="text-muted-foreground text-start">
-                  <strong>Excellence – </strong> We deliver results that meet global standards.
-                </p>
-                <p className="text-muted-foreground text-start">
-                  <strong>Empowerment – </strong> We equip individuals and businesses with tools for success.
-                </p>
-                <p className="text-muted-foreground text-start">
-                  <strong>Growth – </strong> We promote continuous learning and career development.
-                </p>
-                <p className="text-muted-foreground text-start">
-                  <strong>Impact – </strong> We measure success by the lives transformed and opportunities created.
-                </p>
-                <p className="text-muted-foreground text-start">
-                  <strong>Availability – </strong> We are known for our ever-present nature, always ready to respond to you and provide assistance when you need it.
-                </p>
-              </CardContent>
-            </Card> */}
+            <AnimatedCard />
+
+
           </div>
         </section>
 
@@ -297,58 +298,38 @@ const Home = () => {
 
         {/* Testimonials */}
         <section className="py-16">
-  <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
-  <div className="relative w-full overflow-hidden">
-    <div className="flex w-fit animate-loop-scroll">
-      {testimonials.map((testimonial, index) => (
-        <Card key={index} className="flex-none w-80 mx-4 hover:shadow-lg transition-shadow">
-          <CardContent className="p-6">
-            <p className="text-sm italic mb-4">"{testimonial.content}"</p>
-            <div>
-              <p className="font-semibold text-sm">{testimonial.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {testimonial.role}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {testimonial.company}
-              </p>
+          <h2 className="text-3xl font-bold text-center mb-12 fade-in-up">What Our Users Say</h2>
+          <div className="relative  overflow-hidden">
+            <div className="flex gap-4 w-fit animate-loop-scroll">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="flex-none max-w-80  hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <p className="text-sm italic mb-4">"{testimonial.content}"</p>
+                    <div>
+                      <p className="font-semibold text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {testimonial.role}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {testimonial.company}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  </div>
-</section>
-        
-
+          </div>
+        </section>
         {/* Newsletter Signup */}
         <MailChimpSubscribe />
-        {/* <section className="py-16">
-          <Card className="max-w-2xl mx-auto">
-            <CardHeader className="text-center">
-              <CardTitle>Stay Updated</CardTitle>
-              <CardDescription>
-                Get the latest job opportunities and career tips delivered to your inbox.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
-                <Input placeholder="Enter your email address" className="flex-1" />
-                <Button>Subscribe</Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
-            </CardContent>
-          </Card>
-        </section> */}
 
-        
       </div>
-      {/* <div className="w-full h-[100px] bg-red-200 ">zsgjjrdsjrdjytdfjty</div> */}
+      <div className={` border-2 border-white min-h-[70vh] max-lg:hidden ${scrollY > 100 ? 'fixed animate-slide-in-right  right-0 top-50 bottom-0 z-10' : 'animate-slide-out-right'}`}>
+        <AdBanner position="side" />
+      </div>
 
     </div>
-  );
-};
+  </div>;
+}
 
 export default Home;

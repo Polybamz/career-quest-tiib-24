@@ -19,6 +19,9 @@ import ArticlePage from "./pages/Article";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import JobSeekerProfile from "./pages/JobSeekerProfile";
 import JobSeekerPortal from "./pages/JobSeekerPortal";
+import CookieConsentBanner from "./components/ui/cookies_concent";
+import AppRouter from "./AppRouter";
+
 
 const queryClient = new QueryClient();
 
@@ -32,27 +35,13 @@ const App = () => (
           <div className="min-h-screen bg-background">
             <Header />
             <main>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/jobs" element={<Jobs />} />
-                <Route path="/coaching" element={<Coaching />} />
-                <Route path="/employers" element={<Employers />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/tiib" element={<TIIB />} />
-                <Route path="/auth" element={<Register/>}/>
-                <Route path="/employer-dashboard" element={<EmployerDashboard/>}/>
-                <Route path="/job-seeker-profile" element={<JobSeekerProfile/>}/>
-                <Route path="/job-seeker-portal" element={<JobSeekerPortal/>}/>
-                <Route path="/:type/article/:id" element={<ArticlePage/>}/>
-
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AppRouter/>   
             </main>
             <Footer />
             <MobileNav />
           </div>
         </BrowserRouter>
+        <CookieConsentBanner/>
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

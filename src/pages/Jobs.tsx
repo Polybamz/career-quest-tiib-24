@@ -7,10 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AdBanner from "@/components/layout/AdBanner";
 import { MapPin, Briefcase, DollarSign, ExternalLink, Mail, Search, Clock } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { getJobs } from "../../firebase";
 
 import { cn } from "@/lib/utils"; // Assuming you have a utility for class names
-
+import { useJobs } from "@/context/useJobContext";
 // --- Helper function for relative time ---
 const timeAgo = (dateString: string) => {
   const date = new Date(dateString);
@@ -35,205 +34,16 @@ const Jobs = () => {
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [jobs, setJobs] = useState([])
-const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
   
    useScrollAnimation();
    const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
-  // --- Enriched Mock Job Data ---
-  // Added logoUrl and postedDate for a more realistic and user-friendly experience
-  useEffect(()=>{
-    try {
-      getJobs().then(res => {
-        console.log(res)
-        setJobs(res)
-      }).catch(er=>{
-        setError(er)
-      }).finally(()=> setIsLoading(false))
-    } catch (er) {
-      setError(er)
-    }
-  },[])
-  const jobsfff = useMemo(() => [
-    {
-      id: 1,
-      title: "Senior Software Engineer",
-      company: "TechCorp Inc.",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
-      postedDate: "2025-08-10T10:00:00Z",
-      applyType: "external",
-      applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "$8,000,000 - $12,000,000 Annually",
-      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
-    },
-    {
-      id: 2,
-      title: "Marketing Manager",
-      company: "Growth Marketing Ltd",
-      logoUrl: "/placeholder.svg",
-      location: "Abuja, Nigeria",
-      type: "Full-time",
-      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
-      postedDate: "2025-08-12T14:30:00Z",
-      applyType: "email",
-      email: "careers@growthmarketing.com",
-      salary: "$6,000,000 - $9,000,000 Annually",
-      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
-    },
-    {
-      id: 3,
-      title: "Data Analyst (Contract)",
-      company: "Analytics Pro",
-      logoUrl: "/placeholder.svg",
-      location: "Port Harcourt, Nigeria",
-      type: "Contract",
-      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
-      postedDate: "2025-08-15T09:00:00Z",
-      applyType: "external",
-      applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "$500,000 - $700,000 Monthly",
-      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
-    },
-    {
-      id: 4,
-      title: "UI/UX Designer",
-      company: "Design Studios",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Remote",
-      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
-      postedDate: "2025-08-05T11:00:00Z",
-      applyType: "email",
-      email: "hello@designstudios.com",
-      salary: "$5,000,000 - $8,000,000 Annually",
-      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
-    },
-     {
-      id: 1,
-      title: "Senior Software Engineer",
-      company: "TechCorp Inc.",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
-      postedDate: "2025-08-10T10:00:00Z",
-      applyType: "external",
-      applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "$8,000,000 - $12,000,000 Annually",
-      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
-    },
-    {
-      id: 2,
-      title: "Marketing Manager",
-      company: "Growth Marketing Ltd",
-      logoUrl: "/placeholder.svg",
-      location: "Abuja, Nigeria",
-      type: "Full-time",
-      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
-      postedDate: "2025-08-12T14:30:00Z",
-      applyType: "email",
-      email: "careers@growthmarketing.com",
-      salary: "$6,000,000 - $9,000,000 Annually",
-      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
-    },
-    {
-      id: 3,
-      title: "Data Analyst (Contract)",
-      company: "Analytics Pro",
-      logoUrl: "/placeholder.svg",
-      location: "Port Harcourt, Nigeria",
-      type: "Contract",
-      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
-      postedDate: "2025-08-15T09:00:00Z",
-      applyType: "external",
-      applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "$500,000 - $700,000 Monthly",
-      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
-    },
-    {
-      id: 4,
-      title: "UI/UX Designer",
-      company: "Design Studios",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Remote",
-      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
-      postedDate: "2025-08-05T11:00:00Z",
-      applyType: "email",
-      email: "hello@designstudios.com",
-      salary: "$5,000,000 - $8,000,000 Annually",
-      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
-    }, {
-      id: 1,
-      title: "Senior Software Engineer",
-      company: "TechCorp Inc.",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description: "Join our dynamic team as a Senior Software Engineer. We're looking for someone with 5+ years experience in React, Node.js, and cloud technologies. You will be responsible for building and maintaining our core platform, ensuring scalability and performance.",
-      postedDate: "2025-08-10T10:00:00Z",
-      applyType: "external",
-      applyLink: "https://techcorp.com/careers/senior-engineer",
-      salary: "$8,000,000 - $12,000,000 Annually",
-      tags: ["React", "Node.js", "AWS", "Senior Level", "Backend"]
-    },
-    {
-      id: 2,
-      title: "Marketing Manager",
-      company: "Growth Marketing Ltd",
-      logoUrl: "/placeholder.svg",
-      location: "Abuja, Nigeria",
-      type: "Full-time",
-      description: "Lead our marketing initiatives and drive brand growth. Experience in digital marketing, content strategy, and team leadership required. You will develop and execute marketing campaigns across various channels.",
-      postedDate: "2025-08-12T14:30:00Z",
-      applyType: "email",
-      email: "careers@growthmarketing.com",
-      salary: "$6,000,000 - $9,000,000 Annually",
-      tags: ["Marketing", "Digital Marketing", "Leadership", "Mid Level", "SEO"]
-    },
-    {
-      id: 3,
-      title: "Data Analyst (Contract)",
-      company: "Analytics Pro",
-      logoUrl: "/placeholder.svg",
-      location: "Port Harcourt, Nigeria",
-      type: "Contract",
-      description: "Analyze complex datasets and provide actionable insights. Strong skills in Python, SQL, and data visualization tools like Tableau are required for this 6-month contract role.",
-      postedDate: "2025-08-15T09:00:00Z",
-      applyType: "external",
-      applyLink: "https://analyticspro.com/careers/data-analyst",
-      salary: "$500,000 - $700,000 Monthly",
-      tags: ["Python", "SQL", "Data Analysis", "Tableau", "Contract"]
-    },
-    {
-      id: 4,
-      title: "UI/UX Designer",
-      company: "Design Studios",
-      logoUrl: "/placeholder.svg",
-      location: "Lagos, Nigeria",
-      type: "Remote",
-      description: "Create stunning and intuitive user experiences. A strong portfolio showcasing mobile and web design expertise is required. You will work closely with product managers and engineers.",
-      postedDate: "2025-08-05T11:00:00Z",
-      applyType: "email",
-      email: "hello@designstudios.com",
-      salary: "$5,000,000 - $8,000,000 Annually",
-      tags: ["UI/UX", "Figma", "Web Design", "Mobile App Design", "Creative"]
-    }
-  ], []);
-  //  if(!jobs || jobs.length === 0) {
-  //   return (
-  //     <div className="container mx-auto px-4 py-8">
-  //       <h1 className="text-2xl font-bold text-center">Loading Jobs...</h1>
-  //       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-  //     </div>
-  //   );}
-  // --- Filtering Logic ---
-  const filteredJobs = jobs ?? useMemo(() => {
-    return jobs.filter(job => {
+   const { jobs: loadedJobs, isLoading: jobLoading, error: jobError } = useJobs();
+
+  
+
+  const filteredJobs = loadedJobs || useMemo(() => {
+    return loadedJobs?.filter(job => {
       const searchTermLower = searchTerm.toLowerCase();
       const locationLower = location.toLowerCase();
       
@@ -247,7 +57,7 @@ const [isLoading, setIsLoading] = useState(true);
       
       return matchesSearch && matchesLocation && matchesType;
     });
-  }, [jobs, searchTerm, location, jobType]);
+  }, [loadedJobs, searchTerm, location, jobType]);
 
   // --- Set initial selected job ---
   if (!selectedJob && filteredJobs.length > 0) {
@@ -266,13 +76,15 @@ const [isLoading, setIsLoading] = useState(true);
     }
   };
 
-  type Job = typeof jobs[0];
-  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',jobs)
+  type Job = typeof loadedJobs[0];
+  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',loadedJobs)
+
+  
 
   return (
     <div className="lg:min-h-screen bg-muted/20 w-full">
       {/* --- Top Banner Ad --- */}
-        <AdBanner width={screenWidth} height={160} position="top" isHidden={false}/>
+        <AdBanner  position="top"/>
     
 
       <div className="container mx-auto px-4 py-8">
@@ -280,7 +92,7 @@ const [isLoading, setIsLoading] = useState(true);
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold tracking-tight mb-2">Find Your Next Opportunity</h1>
           <p className="text-lg text-muted-foreground">
-            Search through {jobs.length} open positions.
+            Search through {loadedJobs?.length} open positions.
           </p>
         </div>
 
@@ -321,8 +133,19 @@ const [isLoading, setIsLoading] = useState(true);
           </CardContent>
         </Card>
       <div className="flex flex-col gap-4 lg:hidden">
+        {
+          jobLoading && <div className="text-center py-12">
+            <p className="text-lg text-muted-foreground">Loading jobs...</p>
+          </div>
+        }
+        {
+          jobError && <div className="w-full text-center py-12 h-34 flex flex-col justify-center items-center">
+            <p className="text-lg text-muted-foreground">Error loading jobs: {jobError}</p>
+            {/* <button onClick={() => useJobs()}>Try Again</button> */}
+            </div>
+        }
           {
-          filteredJobs.map((job, index)=>(
+         !jobLoading &&  filteredJobs?.map((job, index)=>(
              <Card key={index} className="sticky top-24 overflow-y-auto shadow-sm">
                 <CardHeader>
                   <div className="flex gap-4 items-start">

@@ -15,6 +15,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { db, getJobAnalytics } from '../../firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import { useJobs } from "@/context/useJobContext";
+
 
 interface Job {
   id: string;
@@ -41,11 +43,11 @@ const EmployerDashboard = () => {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [analytics, setAnalytics] = useState<any>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const { getJobByEmployerId, employerJobState, addJob,deleteJob, addJobState,updateJob,updateJobState, deleteJobState } = useJobs();
 
   // Form state, updated to match Job interface
   const [formData, setFormData] = useState({
@@ -65,36 +67,43 @@ const EmployerDashboard = () => {
 
   useEffect(() => {
     if (user) {
-      fetchJobs();
+     // fetchJobs();
       fetchAnalytics();
+      getJobByEmployerId(user.uid)
+        .then((res) => {
+          console.log("Employer Jobs fetched:", res);
+        })
+        .catch((er) => {
+          console.log("Error fetching employer jobs:", er);
+        });
     }
   }, [user]);
 
-  const fetchJobs = async () => {
-    if (!user) return;
+  // const fetchJobs = async () => {
+  //   if (!user) return;
     
-    try {
-      const jobsRef = collection(db, 'jobs');
-      const q = query(jobsRef, where('employerId', '==', user.uid));
-      const querySnapshot = await getDocs(q);
+  //   try {
+  //     const jobsRef = collection(db, 'jobs');
+  //     const q = query(jobsRef, where('employerId', '==', user.uid));
+  //     const querySnapshot = await getDocs(q);
       
-      const jobsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Job[];
+  //     const jobsData = querySnapshot.docs.map(doc => ({
+  //       id: doc.id,
+  //       ...doc.data()
+  //     })) as Job[];
       
-      setJobs(jobsData);
-    } catch (error) {
-      console.error('Error fetching jobs:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch jobs",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setJobs(jobsData);
+  //   } catch (error) {
+  //     console.error('Error fetching jobs:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to fetch jobs",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const fetchAnalytics = async () => {
     if (!user) return;
@@ -141,40 +150,42 @@ const EmployerDashboard = () => {
       status: 'pending' as const,
     };
 
-    try {
-      if (editingJob) {
-        const jobRef = doc(db, 'jobs', editingJob.id);
-        await updateDoc(jobRef, { ...commonJobData });
-        toast({
-          title: "Success",
-          description: "Job updated successfully",
-        });
-      } else {
-        const jobData = {
-          ...commonJobData,
-          employerId: user.uid,
-          createdAt: serverTimestamp(),
-          postedDate: new Date().toISOString(), // Add postedDate
-        };
-        await addDoc(collection(db, 'jobs'), jobData);
-        toast({
-          title: "Success",
-          description: "Job posted successfully",
-        });
-      }
+    await addJob(commonJobData);
 
-      setIsDialogOpen(false);
-      setEditingJob(null);
-      resetForm();
-      fetchJobs();
-    } catch (error) {
-      console.error('Error saving job:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save job",
-        variant: "destructive",
-      });
-    }
+    // try {
+    //   if (editingJob) {
+    //     const jobRef = doc(db, 'jobs', editingJob.id);
+    //     await updateDoc(jobRef, { ...commonJobData });
+    //     toast({
+    //       title: "Success",
+    //       description: "Job updated successfully",
+    //     });
+    //   } else {
+    //     const jobData = {
+    //       ...commonJobData,
+    //       employerId: user.uid,
+    //       createdAt: serverTimestamp(),
+    //       postedDate: new Date().toISOString(), // Add postedDate
+    //     };
+    //     await addDoc(collection(db, 'jobs'), jobData);
+    //     toast({
+    //       title: "Success",
+    //       description: "Job posted successfully",
+    //     });
+    //   }
+
+    //   setIsDialogOpen(false);
+    //   setEditingJob(null);
+    //   resetForm();
+    //  // fetchJobs();
+    // } catch (error) {
+    //   console.error('Error saving job:', error);
+    //   toast({
+    //     title: "Error",
+    //     description: "Failed to save job",
+    //     variant: "destructive",
+    //   });
+    // }
   };
 
   const handleEdit = (job: Job) => {
@@ -203,7 +214,7 @@ const EmployerDashboard = () => {
         title: "Success",
         description: "Job deleted successfully",
       });
-      fetchJobs();
+      //fetchJobs();
     } catch (error) {
       console.error('Error deleting job:', error);
       toast({
@@ -237,6 +248,14 @@ const EmployerDashboard = () => {
     setIsDialogOpen(true);
   };
 
+  useEffect(() => {
+    if (employerJobState.success) {
+      setJobs(employerJobState['data'])
+      //fetchJobs();
+    }
+  },[employerJobState.success, employerJobState['data']])
+console.log(employerJobState)
+console.log(user)
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -440,7 +459,7 @@ const EmployerDashboard = () => {
             </Dialog>
           </div>
 
-          {loading ? (
+          {employerJobState.loading ? (
             <div className="text-center py-8">Loading...</div>
           ) : (
             <Card>
