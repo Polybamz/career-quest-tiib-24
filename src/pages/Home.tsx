@@ -129,8 +129,8 @@ const Home = () => {
   }, []);
 
   return <div className="min-h-screen flex-col">
-    <div className=" w-full ">
-      <AdBanner position="top" />
+    <div className=" w-full flex justify-center items-center ">
+      <AdBanner position="top" className="py-2" />
     </div>
     <div className="flex justify-center items-start w-full">
       {/* <div className={` border-2 min-h-[70vh] max-lg:hidden ${scrollY > 100 ? 'animate-slide-in-left fixed left-0 top-50 bottom-0 z-10' : 'animate-slide-out-left'}`}>
@@ -324,8 +324,8 @@ const Home = () => {
         <MailChimpSubscribe />
 
       </div>
-      <div className={` border-2 border-white min-h-[70vh] max-lg:hidden ${scrollY > 100 ? 'fixed animate-slide-in-right  right-0 top-50 bottom-0 z-10' : 'animate-slide-out-right'}`}>
-        <AdBanner position="side" />
+      <div className={`  border-white min-h-[70vh] max-lg:hidden ${scrollY > 100 ? 'fixed animate-slide-in-right  right-0 top-50 bottom-0 z-10' : 'animate-slide-out-right'}`}>
+        <AdBanner position="side"  />
       </div>
 
     </div>

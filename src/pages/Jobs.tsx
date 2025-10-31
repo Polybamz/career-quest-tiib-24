@@ -84,7 +84,9 @@ const Jobs = () => {
   return (
     <div className="lg:min-h-screen bg-muted/20 w-full">
       {/* --- Top Banner Ad --- */}
-        <AdBanner  position="top"/>
+       <div className="w-full flex justify-center items-center">
+        <AdBanner position="top" />
+       </div>
     
 
       <div className="container mx-auto px-4 py-8">

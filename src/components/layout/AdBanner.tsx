@@ -26,7 +26,7 @@ const getAdDimensions = (position: AdBannerProps['position']) => {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     const map = {
-        top: { width: screenWidth, height: 150 },
+        top: { width: 1000, height: 150 },
         side: { width: 160, height: screenHeight * 0.8 },
         inline: { width: 468, height: 60 },
     };
@@ -108,7 +108,7 @@ const AdBanner: React.FC<AdBannerProps> = ({ position, className = '' }) => {
                     key={current.id}
                     src={current.imageUrl}
                     alt={current.altText || 'Advertisement'}
-                    className="w-full h-full object-cover rounded-[2px] transition-opacity duration-700"
+                    className="w-full h-full  rounded-[2px] transition-opacity duration-700"
                     style={{ animation: 'fade-in 0.7s forwards' }}
                     onError={(e) => {
                         e.currentTarget.src = `https://placehold.co/${width}x${height}/ef4444/ffffff?text=Ad+Load+Error`;
