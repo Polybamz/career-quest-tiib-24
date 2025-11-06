@@ -23,7 +23,7 @@ const AnimatedCard = () => {
   }, [values.length]);
 
   return (
-    <Card className="max-h-[400px] overflow-hidden shadow-lg">
+    <Card className=" hover:shadow-lg  hover:scale-105">
       <CardHeader>
         <Award className="h-12 w-12 text-accent mx-auto mb-4" />
         <CardTitle className="text-center text-black">Values</CardTitle>

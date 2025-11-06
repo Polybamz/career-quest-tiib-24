@@ -119,17 +119,17 @@ const Jobs = () => {
                 />
               </div>
               <div>
-                {/* <Select value={jobType} onValueChange={setJobType}>
+                <Select value={jobType} onValueChange={setJobType}>
                   <SelectTrigger className="h-12 text-base">
                     <SelectValue placeholder="Job Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="All">All Types</SelectItem>
                     <SelectItem value="Full-time">Full-time</SelectItem>
                     <SelectItem value="Contract">Contract</SelectItem>
                     <SelectItem value="Remote">Remote</SelectItem>
                   </SelectContent>
-                </Select> */}
+                </Select>
               </div>
             </div>
           </CardContent>

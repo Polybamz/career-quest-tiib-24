@@ -13,10 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 import { User, GraduationCap, MapPin, Phone, Mail, FileText, Award } from 'lucide-react';
 
 const JobSeekerProfile = () => {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, createJSState:{ loading, error, success}, createUpdateJSProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const [profileExists, setProfileExists] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -74,33 +73,25 @@ const JobSeekerProfile = () => {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      await createJobSeekerProfile(user.uid, formData);
-      await updateUserProfile({ profileComplete: true });
-      
-      toast({
-        title: "Profile created successfully!",
-        description: "Welcome to your job seeker portal",
-      });
-
-      navigate('/job-seeker-portal');
-    } catch (error) {
-      console.error('Error creating profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create profile. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uuid)
+   
   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+  useEffect(()=>{
+    if(success){
+      navigate('/job-seeker-portal');
+
+    }
+    // if(error){
+    //   toast({
+    //     title:'Error',
+    //     description: error
+    //   })
+    // }
+  })
 
   if (!user) {
     return (
@@ -113,6 +104,8 @@ const JobSeekerProfile = () => {
       </div>
     );
   }
+
+  //console.log(user)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -344,6 +337,7 @@ const JobSeekerProfile = () => {
               {loading ? 'Creating Profile...' : 'Complete Profile & Access Portal'}
             </Button>
           </form>
+          {error && <p className='text-red-400'>{error}</p>}
         </CardContent>
       </Card>
     </div>

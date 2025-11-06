@@ -23,13 +23,13 @@ const Footer = () => {
     { name: "About Us", href: "/about" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
-    { name: "FAQ", href: "/faq" }
+    { name: "FAQ", href: "/contact" }
   ];
 
 
 
   return (
-    <footer className={`hidden  bg-muted z-100 border-t ${location.pathname == 'employer-dashboard' ? 'hidden  ' : 'md:block'}`}>
+    <footer className={`hidden  bg-muted z-100 border-t ${location.pathname == '/employer-dashboard' ? 'hidden  ' : 'md:block'}`}>
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

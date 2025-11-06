@@ -24,7 +24,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${location.pathname == '/tiib' ? "hidden" : "block"}`}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -41,13 +41,13 @@ const Header = () => {
             </div>
             <div className="flex flex-col justify-center h-[0px] items-start">
               { location.pathname == '/tiib' ? (
-                   <span className="text-xl font-bold text-blue-400">TIIB</span>
+                   <span className="text-xl font-bold text-secondary">TIIB</span>
               ) : (
                  <span className="text-xl font-bold text-primary">YoCaCo</span>
               )}
              
               { location.pathname == '/tiib' ? (
-              <span className=" font-[400] text-[12px] text-blue-400">The Institute of Integrity Building
+              <span className=" font-[400] text-[12px] text-secondary">The Institute of Integrity Building
 </span>
               ) : (
               <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
@@ -63,7 +63,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname == '/tiib' ? 'text-blue-400' : location.pathname === item.href
+                className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname == '/tiib' ? 'text-secondary' : location.pathname === item.href
                     ? "text-primary"
                     : "text-muted-foreground"
                   }`}
@@ -91,7 +91,7 @@ const Header = () => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-blue-400'} ${location.pathname === item.href
+                    className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-secondary'} ${location.pathname === item.href
                         ? "text-primary"
                         : "text-muted-foreground"
                       }`}
@@ -100,9 +100,9 @@ const Header = () => {
                   </Link>
                 ))}
 
-                <Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary">
-                  Sign In
-                </Link>
+                 {user ? (<Link  onClick={() => setIsOpen(false)} to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+              Sign In
+            </Link>)}
               </div>
             </SheetContent>
           </Sheet>

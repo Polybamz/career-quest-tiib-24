@@ -5,13 +5,7 @@ import useContent from "@/hooks/useContent";
 // =========================
 // 🔹 TYPES (UNCHANGED)
 // =========================
-interface BannerData {
-    id: string;
-    imageUrl: string;
-    linkUrl: string;
-    altText: string;
-    displayOrder: "top" | "side" | "inline";
-}
+
 
 interface AdBannerProps {
     position: 'top' | 'side' | 'inline';
@@ -50,8 +44,18 @@ const AdBanner: React.FC<AdBannerProps> = ({ position, className = '' }) => {
         return data.filter((b) => b.displayOrder === position);
     }, [position, bannerState]);
 
-    const current = banners[index];
-    const multiple = banners.length > 1;
+    // Ensure banners is always an array and guard reads from it
+    const safeBanners = Array.isArray(banners) ? banners : [];
+    const multiple = safeBanners.length > 1;
+    // Keep `index` within bounds when the banners list changes
+    useEffect(() => {
+        setIndex((prev) => {
+            if (safeBanners.length === 0) return 0;
+            return Math.min(prev, safeBanners.length - 1);
+        });
+    }, [safeBanners.length]);
+
+    const current = safeBanners[index] ?? safeBanners[0];
 
     // Delay for side banners (Hook 5)
     useEffect(() => {

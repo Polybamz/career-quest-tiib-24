@@ -16,7 +16,8 @@ import { db, getJobAnalytics } from '../../firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { useJobs } from "@/context/useJobContext";
-
+import SubscriptionPlans from '@/components/ui/subscriptions_plan';
+import { PLAN_PRE, hasPermission, SubsPlan } from '@/types/subs_type';
 
 interface Job {
   id: string;
@@ -48,7 +49,8 @@ const EmployerDashboard = () => {
   const [analytics, setAnalytics] = useState<any>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const { getJobByEmployerId, employerJobState, addJob,deleteJob, addJobState,updateJob,updateJobState, deleteJobState } = useJobs();
-
+  // derive subscription plan from user object if available
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(true)
   // Form state, updated to match Job interface
   const [formData, setFormData] = useState({
     title: '',
@@ -78,6 +80,25 @@ const EmployerDashboard = () => {
         });
     }
   }, [user]);
+
+  // Determine the user's plan safely (fall back to Starter)
+  const getUserPlan = (): SubsPlan => {
+    const asAny = (user || {}) as any;
+    const plan = asAny?.plan || asAny?.role || asAny?.subscriptionPlan || 'Starter';
+    if (plan === 'Starter' || plan === 'Professional' || plan === 'Enterprise') return plan;
+    return 'Starter';
+  };
+  const userPlan = getUserPlan();
+
+  const allowedPostsFromPlan = (plan: SubsPlan) => {
+    const arr = PLAN_PRE[plan];
+    const postLimitString = arr.find((s) => /post up to/i.test(s) || /unlimited job postings/i.test(s));
+    if (!postLimitString) return 0;
+    if (/unlimited/i.test(postLimitString)) return Infinity;
+    const m = postLimitString.match(/post up to (\d+)/i);
+    return m ? Number(m[1]) : 0;
+  };
+  const allowedPosts = allowedPostsFromPlan(userPlan);
 
   // const fetchJobs = async () => {
   //   if (!user) return;
@@ -276,16 +297,25 @@ console.log(user)
         <div>
           <h1 className="text-3xl font-bold">Employer Dashboard</h1>
           <p className="text-muted-foreground">Welcome back, {user.name}</p>
+          <div className="mt-2 flex items-center gap-3">
+            <Badge variant="outline">Plan: {userPlan}</Badge>
+            <Button size="sm" variant="ghost" onClick={() => setIsSubscribed(false)}>Manage Plan</Button>
+          </div>
         </div>
         <Button onClick={logout} variant="outline">
           Logout
         </Button>
       </div>
-
-      <Tabs defaultValue="jobs" className="space-y-6">
+   {!isSubscribed && (<SubscriptionPlans/>)}
+    {isSubscribed && (  <Tabs defaultValue="jobs" className="space-y-6">
         <TabsList>
           <TabsTrigger value="jobs">My Jobs</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          {/* Analytics only available on Professional and Enterprise */}
+          {hasPermission(userPlan, 'Analytics and reporting') ? (
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          ) : (
+            <TabsTrigger value="analytics" disabled>Analytics (Upgrade)</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="jobs" className="space-y-6">
@@ -293,7 +323,7 @@ console.log(user)
             <h2 className="text-2xl font-semibold">Job Postings</h2>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={handleNewJob}>
+                <Button onClick={handleNewJob} disabled={allowedPosts !== Infinity && jobs.length >= allowedPosts}>
                   <Plus className="mr-2 h-4 w-4" />
                   Post New Job
                 </Button>
@@ -457,6 +487,18 @@ console.log(user)
                 </form>
               </DialogContent>
             </Dialog>
+            {/* Quick action: Browse candidates if plan allows */}
+            <div>
+              {hasPermission(userPlan, 'Access to candidate profiles') ? (
+                <Button size="sm" variant="outline" onClick={() => {/* TODO: open candidate modal */}}>
+                  Browse Candidates
+                </Button>
+              ) : (
+                <Button size="sm" variant="ghost" onClick={() => setIsSubscribed(false)}>
+                  Upgrade to Browse Candidates
+                </Button>
+              )}
+            </div>
           </div>
 
           {employerJobState.loading ? (
@@ -531,6 +573,7 @@ console.log(user)
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
+                              <Button>Promote</Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -546,141 +589,148 @@ console.log(user)
         <TabsContent value="analytics" className="space-y-6">
           {analyticsLoading ? (
             <div className="text-center py-8">Loading analytics...</div>
-          ) : analytics ? (
-            <>
-              
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Total Jobs</p>
-                        <p className="text-3xl font-bold">{analytics.totalJobs}</p>
-                      </div>
-                      <Building className="h-8 w-8 text-primary" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Active Jobs</p>
-                        <p className="text-3xl font-bold text-primary">{analytics.activeJobs}</p>
-                      </div>
-                      <TrendingUp className="h-8 w-8 text-primary" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Total Applications</p>
-                        <p className="text-3xl font-bold text-secondary">{analytics.applicationStats.totalApplications}</p>
-                      </div>
-                      <Users className="h-8 w-8 text-secondary" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Avg per Job</p>
-                        <p className="text-3xl font-bold text-accent">{analytics.applicationStats.averagePerJob}</p>
-                      </div>
-                      <BarChart3 className="h-8 w-8 text-accent" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Monthly Job Postings</CardTitle>
-                    <CardDescription>Number of jobs posted each month</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={analytics.monthlyData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="jobs" fill="hsl(var(--primary))" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Job Types Distribution</CardTitle>
-                    <CardDescription>Breakdown of job types posted</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Pie
-                          data={analytics.typeData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ type, count }) => `${type}: ${count}`}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="count"
-                        >
-                          {analytics.typeData.map((entry: any, index: number) => (
-                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? 'hsl(var(--primary))' : 'hsl(var(--secondary))'} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </div>
-
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Job Status Overview</CardTitle>
-                  <CardDescription>Current status of all your job postings</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-4 bg-primary/10 rounded-lg">
-                      <p className="text-2xl font-bold text-primary">{analytics.activeJobs}</p>
-                      <p className="text-sm text-muted-foreground">Active Jobs</p>
-                    </div>
-                    <div className="text-center p-4 bg-secondary/10 rounded-lg">
-                      <p className="text-2xl font-bold text-secondary">{analytics.pendingJobs}</p>
-                      <p className="text-sm text-muted-foreground">Pending Jobs</p>
-                    </div>
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className="text-2xl font-bold text-muted-foreground">{analytics.closedJobs}</p>
-                      <p className="text-sm text-muted-foreground">Closed Jobs</p>
-                    </div>
+          ) : (
+            // If user has analytics permission show analytics (or no-data), otherwise prompt upgrade
+            hasPermission(userPlan, 'Analytics and reporting') ? (
+              analytics ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Total Jobs</p>
+                            <p className="text-3xl font-bold">{analytics.totalJobs}</p>
+                          </div>
+                          <Building className="h-8 w-8 text-primary" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Active Jobs</p>
+                            <p className="text-3xl font-bold text-primary">{analytics.activeJobs}</p>
+                          </div>
+                          <TrendingUp className="h-8 w-8 text-primary" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Total Applications</p>
+                            <p className="text-3xl font-bold text-secondary">{analytics.applicationStats.totalApplications}</p>
+                          </div>
+                          <Users className="h-8 w-8 text-secondary" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Avg per Job</p>
+                            <p className="text-3xl font-bold text-accent">{analytics.applicationStats.averagePerJob}</p>
+                          </div>
+                          <BarChart3 className="h-8 w-8 text-accent" />
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Monthly Job Postings</CardTitle>
+                        <CardDescription>Number of jobs posted each month</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart data={analytics.monthlyData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="jobs" fill="hsl(var(--primary))" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Job Types Distribution</CardTitle>
+                        <CardDescription>Breakdown of job types posted</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <PieChart>
+                            <Pie
+                              data={analytics.typeData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ type, count }) => `${type}: ${count}`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="count"
+                            >
+                              {analytics.typeData.map((entry: any, index: number) => (
+                                <Cell key={`cell-${index}`} fill={index % 2 === 0 ? 'hsl(var(--primary))' : 'hsl(var(--secondary))'} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Job Status Overview</CardTitle>
+                      <CardDescription>Current status of all your job postings</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="text-center p-4 bg-primary/10 rounded-lg">
+                          <p className="text-2xl font-bold text-primary">{analytics.activeJobs}</p>
+                          <p className="text-sm text-muted-foreground">Active Jobs</p>
+                        </div>
+                        <div className="text-center p-4 bg-secondary/10 rounded-lg">
+                          <p className="text-2xl font-bold text-secondary">{analytics.pendingJobs}</p>
+                          <p className="text-sm text-muted-foreground">Pending Jobs</p>
+                        </div>
+                        <div className="text-center p-4 bg-muted rounded-lg">
+                          <p className="text-2xl font-bold text-muted-foreground">{analytics.closedJobs}</p>
+                          <p className="text-sm text-muted-foreground">Closed Jobs</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <Card>
+                  <CardContent className="p-6">
+                    <p>No analytics data available.</p>
+                  </CardContent>
+                </Card>
+              )
+            ) : (
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-lg font-semibold mb-2">Upgrade for Analytics</h3>
+                  <p className="text-muted-foreground mb-4">Your current plan does not include analytics and reporting. Upgrade to Professional or Enterprise to access full analytics.</p>
+                  <Button onClick={() => setIsSubscribed(false)}>View Plans</Button>
                 </CardContent>
               </Card>
-            </>
-          ) : (
-            <Card>
-              <CardContent className="p-6">
-                <p>No analytics data available.</p>
-              </CardContent>
-            </Card>
+            )
           )}
         </TabsContent>
-      </Tabs>
+      </Tabs>)}
     </div>
   );
 };

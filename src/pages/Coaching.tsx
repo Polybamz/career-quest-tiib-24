@@ -11,7 +11,7 @@ import useArticle from "@/hooks/useArticle";
 const Coaching = () => {
   const { articleState } = useArticle();
   const [activeCategory, setActiveCategory] = useState("All");
-
+ const [showModel, setShowModel] = useState<boolean>(false)
   const loading = articleState.loading; // assuming your hook exposes this
 
   const fallbackArticles = [
@@ -244,7 +244,7 @@ const FeaturedSkeleton = () => (
   </Card>
 );
 
-const CardSkeleton = () => (
+export const CardSkeleton = () => (
   <Card className="flex flex-col">
     <div className="h-40 bg-muted animate-pulse" />
     <CardHeader>

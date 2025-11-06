@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import AdBanner from "@/components/layout/AdBanner";
 import { Users, Target, Award, Briefcase, GraduationCap, Building2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -21,8 +21,7 @@ import m10 from "@/assets/yococa-ent/m10.jpeg";
 import m11 from "@/assets/yococa-ent/m11.jpeg";
 import m12 from "@/assets/yococa-ent/m12.jpeg";
 import useContent from "@/hooks/useContent";
-import ImageGrid from "@/components/ui/image_grid";
-
+import ServiceCard from "@/components/ui/service_card";
 
 const yococaEnt = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12];
 
@@ -228,7 +227,7 @@ const Home = () => {
         {/* Mission, Vision, Values */}
         <section className="py-16 px-4">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center scale-in">
+            <Card className="text-center scale-in hover:shadow-lg hover:scale-105">
               <CardHeader>
 
                 <Target className="h-12 w-12 text-primary mx-auto mb-4" />
@@ -243,12 +242,12 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center scale-in ">
+            <Card className="text-center scale-in hover:shadow-lg hover:scale-105  ">
               <CardHeader>
                 <Users className="h-12 w-12 text-secondary mx-auto mb-4" />
                 <CardTitle>Vision</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent >
                 <p className="text-muted-foreground">
                   To become Africa's leading career empowerment hub, recognized for bridging talent with opportunities, transforming recruitment for organizations and inspiring professionals to grow with confidence and purpose.
                 </p>
@@ -267,15 +266,29 @@ const Home = () => {
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow fade-in-up">
-                  <CardHeader>
-                    <Icon className="h-12 w-12 text-primary mx-auto mb-4" />
-                    <CardTitle className="text-lg">{service.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{service.description}</p>
-                  </CardContent>
-                </Card>
+                <ServiceCard service={service} inbox={index} Icon={Icon}/>
+              //  <div className="relative px-4">
+              //   <div className="w-full h-10 absolute z-10 right-0 left-0 shadow-lg rounded-tr-[12px] rounded-bl-[12px]  py-[2px] top-5 bg-primary">
+              //     <div className="border-y h-full border-dashed rounded-tr-[13px] rounded-bl-[13px] flex justify-center items-center text-white ">
+              //      <p className=" uppercase">{service.title}</p>
+              //     </div>
+              //   </div>
+              //   <div className="h-5 w-4 bg-primary  absolute rounded-br-lg  z-8 right-0 top-12 p-[2px]">
+              //     <div className="h-full w-full border-dashed border-b rounded-br-lg  "></div>
+              //   </div>
+              //   <div className="h-5 w-4 bg-primary absolute rounded-tl-lg  z-8 left-0 top-2"></div>
+              //    <Card key={index} className="text-center hover:shadow-lg transition-shadow fade-in-up ">
+
+              //     <CardHeader>
+              //       <Icon className="h-12 w-12 mt-10 text-primary mx-auto mb-4" />
+              //       <CardTitle className="text-lg">{service.title}</CardTitle>
+              //     </CardHeader>
+              //     <CardContent>
+              //       <p className="text-sm text-muted-foreground">{service.description}</p>
+              //     </CardContent>
+              //     <CardFooter className="flex justify-center items-center"><Button variant="outline" className="w-full">Request Service</Button></CardFooter>
+              //   </Card>
+              //  </div>
               );
             })}
           </div>

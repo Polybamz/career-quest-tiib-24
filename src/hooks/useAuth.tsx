@@ -180,6 +180,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       error: null,
       success: null
     })
+    console.log('///////////////////////////////////',data)
     try {
       const response = await fetch(`${BASE_URL}auth/create-jobseeker-profile/${id}`,
         {
@@ -196,6 +197,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         error: null,
         success: true
       })
+      const userData = Cookies.get('user')
+      setUser({...JSON.parse(userData), profileComplete: true})
     } catch (er) {
       console.log(er)
       setCreateJSState({
@@ -224,6 +227,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw Error('error fetching pro')
       }
       const data = await response.json()
+      console.log('///////////////////////////////', data)
       setGetJSState({
         loading: false,
         error: null,
