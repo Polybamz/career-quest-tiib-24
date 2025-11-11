@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AdBanner from "@/components/layout/AdBanner";
 import { MapPin, Briefcase, DollarSign, ExternalLink, Mail, Search, Clock } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
+import ContactButton from "@/components/ui/support";
 import { cn } from "@/lib/utils"; // Assuming you have a utility for class names
 import { useJobs } from "@/context/useJobContext";
 // --- Helper function for relative time ---
@@ -299,6 +299,7 @@ const Jobs = () => {
           </div>
         </main>
       </div>
+      <ContactButton/>
     </div>
   );
 };

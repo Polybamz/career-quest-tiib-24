@@ -4,17 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdBanner from "@/components/layout/AdBanner";
-import { Target, Heart, Award, Users, BookOpen, Share2, Clock, User, Facebook, X, Youtube, Newspaper } from "lucide-react";
+import { Target, Users, Globe, Building2, Share2, Clock, User, Facebook, X, Youtube, Newspaper, Linkedin, Twitter, Instagram } from "lucide-react";
 import MailchimpSubscribe from "@/components/ui/mailChimp";
-import logo from "@/assets/logo/tiib-logo.png";
+import logo from "@/assets/logo/tiib1.png";
 import useArticle from "@/hooks/useArticle";
 import { useEffect, useState } from "react";
 import { CardSkeleton } from "./Coaching";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Globe } from "lucide-react";
+import { Menu, Award } from "lucide-react";
 import ImageGrid from "@/components/ui/image_grid";
+import img from '../assets/tiib-img.jpeg'
+import ContactButton from "@/components/ui/support";
 
 
 
@@ -44,6 +46,7 @@ const TIIB = () => {
   // Function to update the state on scroll
   const handleScroll = () => {
     setScrollY(window.scrollY);
+    // console.log('Croooooooooooooooooooooooool',window.PageTransitionEvent )
   };
 
   useEffect(() => {
@@ -58,66 +61,26 @@ const TIIB = () => {
   }, []);
   const services = [
     {
-      icon: Heart,
-      title: "Ethics Training",
+      icon: Building2,
+      title: "For Organizations",
       description:
-        "Comprehensive programs on professional ethics and moral decision-making in the workplace.",
-    },
-    {
-      icon: Award,
-      title: "Integrity Certification",
-      description:
-        "Industry-recognized certifications that validate your commitment to ethical practices.",
+        "Training, consulting, assessments, and certifications to enhance ethical practices in your organization.",
     },
     {
       icon: Users,
-      title: "Leadership Development",
+      title: "For Youth",
       description:
-        "Building ethical leaders who inspire trust and drive positive organizational change.",
+        "Leadership programs, mentorship, community service, and workshops focused on integrity development.",
     },
     {
-      icon: BookOpen,
-      title: "Research & Publications",
+      icon: Globe,
+      title: "For Society",
       description:
-        "Cutting-edge research on integrity, ethics, and their impact on business success.",
+        "Public awareness campaigns, policy advocacy, research, and collaborative initiatives with NGOs.",
     },
   ];
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Building Trust in the Digital Age",
-      excerpt:
-        "Exploring how organizations can maintain integrity and build trust in an increasingly digital world.",
-      author: "Dr. Adebayo Ogundimu",
-      readTime: "7 min read",
-      date: "August 12, 2024",
-      category: "Digital Ethics",
-      type: 'tiib'
-    },
-    {
-      id: 2,
-      title: "The ROI of Ethical Leadership",
-      excerpt:
-        "Research findings on how ethical leadership practices directly impact organizational performance and profitability.",
-      author: "Prof. Ngozi Okafor",
-      readTime: "10 min read",
-      date: "August 8, 2024",
-      category: "Leadership",
-      type: 'tiib'
-    },
-    {
-      id: 3,
-      title: "Implementing Integrity in SMEs",
-      excerpt:
-        "Practical strategies for small and medium enterprises to embed integrity into their business operations.",
-      author: "Dr. Kemi Adeleke",
-      readTime: "6 min read",
-      date: "August 5, 2024",
-      category: "Business Strategy",
-      type: 'tiib'
-    },
-  ];
+
   const navigation = [
     { name: "Home", href: "/" },
     { name: "Jobs", href: "/jobs" },
@@ -137,120 +100,157 @@ const TIIB = () => {
       setArticls([]);
     }
   }, [articleState?.data, articleState?.loading]);
-  console.log('//////////////////////',article)
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 pb-20 md:pb-0">
-      {/* Top Banner Ad */}
-      <div className="w-full flex justify-center pb-4 ">
-        <AdBanner position="top" />
-      </div>
-
-      <div className="flex w-full  justify-center">
-        <img src={logo} alt="tiib-logo" className="h-40 w-40 mx-auto my-4" />
-        
-      </div>
-     {/* Na bar */}
-      <div className="flex justify-center items-center">
-        <div className={` py-2   border-b  flex justify-between items-center ${scrollY > 200 ? 'fixed top-0 right-0 left-0 w-full rounded-2 seft-center bg-white px-4' : 'w-[80%] mb-2 rounded-full px-6'}`}>
-          <div className="h-10 w-10 rounded bg-muted">
-            <img src={`${logo}`} alt="logo" className="rounded" />
-
-
+    {scrollY > 100 && <ContactButton/>}
+      <div className="w-full h-8 bg-secondary gap-2 text-white flex justify-end items-center p-2">
+        <Linkedin size={18} /><Facebook size={18} /><Twitter size={18} /><Instagram size={18} /> </div>
+      <div className="h-[90vh]  w-full" style={{
+        backgroundImage: `url(${img})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        // filter: 'blur(5px)',
+      }}>
+        <div className="w-full flex flex-col justify-evenly items-center h-full bg-secondary/20">
+          <img src={logo} alt="tiib-logo" className="h-40 w-40 mx-auto my-4 hover:bg-secondary hover:scale-105" />
+          {/* Header */}
+          <div className="text-center text-white mb-12">
+            <h1 className="text-4xl font-bold mb-4">
+              The Institute of Integrity Building (TIIB)
+            </h1>
+            <p className="text-xl  max-w-3xl mx-auto">
+              TIIB promotes integrity across organizations, youth, and society. A nonprofit organization
+              aimed at bringing forth men and women who can learn and adhere to sound moral and ethical values.
+            </p>
+            {/* <p className="text-lg max-w-3xl mx-auto mt-4">
+              Contact us: <a href="tel:+237679116511" className="text-primary bg-white hover:underline">+237 679 116 511</a>
+            </p> */}
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-secondary ${location.pathname === item.href
-                  ? "text-secondary underline"
-                  : "text-muted-foreground"
-                  }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {user ? (<Link to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4  hover:text-secondary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm hover:text-primary ">
-              Sign In
-            </Link>)}
-          </nav>
+          {/* Na bar */}
+          <div className="flex w-full justify-center items-center">
+            <div className={` py-2  border-b  flex justify-between items-center ${scrollY > 250 ? 'fixed transition-all duration-600 top-0 bg-white  right-0 left-0 w-full rounded-2 seft-center  px-4' : 'w-[80%] bg-secondary/20 text-white mb-2  animate-slide-in   rounded-full px-6'}`}>
+              <div className="h-10 w-10 rounded bg-muted">
+                <img src={`${logo}`} alt="logo" className="rounded" />
 
-          {/* Mobile Menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col space-y-4 mt-6">
+
+              </div>
+              <nav className="hidden md:flex items-center space-x-6">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-secondary'} ${location.pathname === item.href
-                        ? "text-primary"
-                        : "text-muted-foreground"
+                    className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === item.href
+                      ? "text-secondary underline"
+                      : "text-whitesmoke"
                       }`}
                   >
                     {item.name}
                   </Link>
                 ))}
+                {user ? (<Link to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4  hover:text-secondary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm hover:text-primary ">
+                  Sign In
+                </Link>)}
+              </nav>
 
-                 {user ? (<Link  onClick={() => setIsOpen(false)} to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
-              Sign In
-            </Link>)}
-              </div>
-            </SheetContent>
-          </Sheet>
+              {/* Mobile Menu */}
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild className="md:hidden">
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                  <div className="flex flex-col space-y-4 mt-6">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-secondary'} ${location.pathname === item.href
+                          ? "text-primary"
+                          : "text-muted-foreground"
+                          }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+
+                    {user ? (<Link onClick={() => setIsOpen(false)} to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+                      Sign In
+                    </Link>)}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
-      <div className="container mx-auto px-4 pb-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
-            The Institute of Integrity Building
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Fostering ethical leadership and building integrity in professional environments across
-            Africa and beyond.
-          </p>
-        </div>
+
+      <div className="w-full flex justify-center pb-4 ">
+        <AdBanner position="inline" />
+      </div>
+
+      <div className="container mt-16 mx-auto px-4 pb-8">
+
 
         {/* Mission, Vision, Values */}
         <section className="mb-16">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center bg-white text-gray-800 border-secondary shadow-md">
+            <div className="relative  hover:scale-105 hover:shadow-lg hover:transition-all hover:duration-600 pr-2">
+              <div className="h-10 w-[140px] bg-secondary  rotate-45 absolute top-2 right-[-2px] p-[2px]">
+                <div className="border border-dashed border-white flex justify-center items-center h-full w-full">
+                  <p className="text-white">Our Mission</p>
+
+                </div>
+
+              </div>
+              <Card className="text-center bg-white text-gray-800 border-secondary shadow-md ">
+                <CardHeader>
+                  <Target className="h-12 w-12 text-secondary mx-auto mb-4" />
+                  <CardTitle className="text-secondary">Our Mission</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    To promote peace, justice, and transparency at all levels to ease conflict resolutions
+                    in organizations, countries, and the world at large, leading to a better peaceful,
+                    secure and war-free world tomorrow.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <Card className="text-center bg-white text-gray-800 border-secondary  hover:scale-105 hover:shadow-lg  hover:transition-all hover:duration-600 shadow-md ">
+              <div className="w-full flex justify-center mt-[-30px] items-center">
+                <div className=" bg-white  border flex justify-center items-center h-16 w-16 border-secondary rounded-full">
+                  <Users className="h-10 w-10 text-teal-500 mx-auto " />
+                </div>
+              </div>
               <CardHeader>
-                <Target className="h-12 w-12 text-secondary mx-auto mb-4" />
-                <CardTitle className="text-secondary">Our Mission</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  To develop and promote integrity-based leadership practices that transform
-                  organizations and communities across Africa, creating sustainable positive impact.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center bg-white text-gray-800 border-secondary shadow-md">
-              <CardHeader>
-                <Users className="h-12 w-12 text-teal-500 mx-auto mb-4" />
+
                 <CardTitle className="text-secondary">Our Vision</CardTitle>
               </CardHeader>
               <CardContent>
+                {/* <Users className="h-12 w-12 text-teal-500 mx-auto mb-4" /> */}
+
                 <p className="text-gray-600">
-                  To be the leading institute for integrity building in Africa, recognized globally
-                  for excellence in ethical leadership development and organizational transformation.
+                  To be Africa's leading institute for integrity building, fostering a generation that
+                  adheres to sound moral and ethical values without fear of ridicule, creating lasting
+                  positive change across organizations, youth, and society.
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center bg-white text-gray-800 border-secondary shadow-md">
+            <Card className="text-center bg-white text-gray-800 border-secondary hover:scale-105 hover:shadow-lg  hover:transition-all hover:duration-600 shadow-md">
+              <div className="w-full flex justify-center mt-[-30px] items-center">
+                <div className=" bg-white  border flex justify-center items-center h-16 w-16 border-secondary rounded-full">
+                <Award className="h-10 w-10 text-secondary mx-auto " />
+                </div>
+              </div>
               <CardHeader>
-                <Award className="h-12 w-12 text-secondary mx-auto mb-4" />
                 <CardTitle className="text-secondary">Our Values</CardTitle>
               </CardHeader>
               <CardContent>
@@ -264,16 +264,16 @@ const TIIB = () => {
         </section>
 
         {/* Services */}
-        <section className="mb-16">
+        <section className="mb-16 " >
           <h2 className="text-3xl font-bold text-center mb-12 ">Our Services</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex flex-col lg:flex-row gap-6">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
                 //  <ServiceCard service={service} Icon={Icon} index={index}/>
                 <Card
                   key={index}
-                  className="text-center hover:shadow-lg transition-shadow bg-white text-gray-800 border-secondary shadow-md"
+                  className="text-center hover:shadow-lg transition-shadow bg-white text-gray-800 border-0 border-secondary shadow-md"
                 >
                   <CardHeader>
                     <Icon className="h-12 w-12 text-secondary mx-auto mb-4" />
@@ -287,7 +287,11 @@ const TIIB = () => {
             })}
           </div>
         </section>
+        {/* Social  Impact */}
+        <section className="mb-16 min-h-[300px] flex flex-col justify-center rounded-sm items-center bg-secondary/50">
+          <h2 className="text-3xl text-white font-bold text-center mb-12 ">Social Impacts</h2>
 
+        </section>
         {/* Inline Ad */}
         <div className="flex justify-center mb-12">
           <AdBanner position="inline" />
@@ -318,7 +322,7 @@ const TIIB = () => {
                 className="hover:shadow-lg transition-shadow bg-white text-gray-800 border-secondary shadow-md"
               >
                 <div className="h-48 bg-secondary flex items-center justify-center">
-                  <ImageGrid images={post.image}/>
+                  <ImageGrid images={post['image']} />
                 </div>
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
@@ -326,7 +330,7 @@ const TIIB = () => {
                       variant="outline"
                       className="text-secondary border-secondary"
                     >
-                      {post.category}
+                      {post['category']}
                     </Badge>
                     <Button
                       variant="ghost"

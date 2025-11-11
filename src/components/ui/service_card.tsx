@@ -13,10 +13,10 @@ const ServiceCard = ({ service, index, Icon }: any) => {
                     <p className=" uppercase">{service.title}</p>
                 </div>
             </div>
-            <div className="h-5 w-4 bg-primary  absolute rounded-br-lg  z-8 right-0 top-12 p-[2px]">
+            <div className="h-5 w-4 bg-green-900  absolute rounded-br-lg  z-8 right-0 top-12 p-[2px]">
                 <div className="h-full w-full border-dashed border-b border-r rounded-br-lg  "></div>
             </div>
-            <div className="h-5 w-4 bg-primary absolute rounded-tl-lg  z-8 left-0 top-3 p-[2px]">
+            <div className="h-5 w-4 bg-green-900 absolute rounded-tl-lg  z-8 left-0 top-3 p-[2px]">
                 <div className="h-full w-full border-dashed border-t border-l  rounded-tl-lg  "></div>
 
             </div>

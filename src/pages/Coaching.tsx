@@ -7,6 +7,7 @@ import { Clock, User, Share2, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import ImageGrid from "@/components/ui/image_grid";
 import useArticle from "@/hooks/useArticle";
+import ContactButton from "@/components/ui/support";
 
 const Coaching = () => {
   const { articleState } = useArticle();
@@ -121,7 +122,7 @@ const Coaching = () => {
                         <Clock className="h-4 w-4 mr-1" /> {featured.readTime}
                       </span>
                     </div>
-                    <Link to={`/coaching/article/${featured.id}`}>
+                    <Link to={`/coaching/article/${featured['id']}`}>
                       <Button>
                         Read More <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
@@ -141,7 +142,7 @@ const Coaching = () => {
                 .map((_, i) => <CardSkeleton key={i} />)
             : filteredArticles.map((post) => (
                 <Card
-                  key={post.id}
+                  key={post['id']}
                   className="hover:shadow-lg transition-shadow cursor-pointer flex flex-col"
                 >
                   <div className="min-h-32 bg-muted flex items-center justify-center p-2">
@@ -180,7 +181,7 @@ const Coaching = () => {
                       ))}
                     </div>
 
-                    <Link to={`/coaching/article/${post.id}`} className="block">
+                    <Link to={`/coaching/article/${post['id']}`} className="block">
                       <Button variant="outline" className="w-full">
                         Read Article
                       </Button>
@@ -211,6 +212,7 @@ const Coaching = () => {
           </CardContent>
         </Card>
       </div>
+      <ContactButton/>
     </div>
   );
 };

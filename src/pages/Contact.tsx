@@ -6,25 +6,28 @@ import { Label } from "@/components/ui/label";
 import AdBanner from "@/components/layout/AdBanner";
 import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react";
 
+
+
+
 const Contact = () => {
   const contactInfo = [
     {
       icon: Phone,
       title: "Phone",
-      value: "+234 901 234 5678",
+      value: "+237681394295",
       description: "Mon-Fri 9AM-6PM WAT"
     },
     {
       icon: Mail,
       title: "Email",
-      value: "hello@careercompanion.ng",
+      value: "yourcareercompanion@gmail.com",
       description: "We'll respond within 24 hours"
     },
     {
       icon: MapPin,
       title: "Office",
-      value: "Lagos, Nigeria",
-      description: "Plot 123, Victoria Island"
+      value: "Mvan, Yaoundé",
+      description: ""
     },
     {
       icon: Clock,
@@ -44,7 +47,7 @@ const Contact = () => {
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       {/* Top Banner Ad */}
       <div className="w-full flex justify-center py-4 bg-muted/30">
-        <AdBanner width={970} height={90} position="top" />
+        <AdBanner  position="top" />
       </div>
 
       <div className="container mx-auto px-4 py-8">
@@ -216,7 +219,7 @@ const Contact = () => {
 
         {/* Inline Ad */}
         <div className="flex justify-center py-12">
-          <AdBanner width={728} height={90} position="inline" />
+          <AdBanner position="inline" />
         </div>
       </div>
     </div>

@@ -138,7 +138,7 @@ const Home = () => {
       <div className="w-full  border-white min-h-screen">
         {/* hero section */}
         <section
-          className="py-20 relative overflow-hidden"
+          className="py-20 min-h-[80vh] relative overflow-hidden"
           style={{
             backgroundImage: `linear-gradient(rgba(51, 31, 31, 0.4), rgba(0, 0, 0, 0.6)), url(${yococaEnt[selectedImage]})`,
             backgroundSize: 'cover',
@@ -146,8 +146,8 @@ const Home = () => {
             backgroundRepeat: 'no-repeat'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20"></div>
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="absolute  inset-0 bg-gradient-to-r from-primary/20 to-secondary/20"></div>
+          <div className="container  mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left fade-in-left">
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
