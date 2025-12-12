@@ -288,10 +288,10 @@ const TIIB = () => {
           </div>
         </section>
         {/* Social  Impact */}
-        <section className="mb-16 min-h-[300px] flex flex-col justify-center rounded-sm items-center bg-secondary/50">
+        {/* <section className="mb-16 min-h-[300px] flex flex-col justify-center rounded-sm items-center bg-secondary/50">
           <h2 className="text-3xl text-white font-bold text-center mb-12 ">Social Impacts</h2>
 
-        </section>
+        </section> */}
         {/* Inline Ad */}
         <div className="flex justify-center mb-12">
           <AdBanner position="inline" />

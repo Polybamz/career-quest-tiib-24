@@ -22,9 +22,9 @@ const Header = () => {
     { name: "TIIB", href: "/tiib" },
     { name: "Contact", href: "/contact" },
   ];
-
+console.log('////// path', location.pathname.split('/')[1])
   return (
-    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${location.pathname == '/tiib' ? "hidden" : "block"}`}>
+    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${location.pathname == '/tiib' ? "hidden" :location.pathname.split('/')[1] == 'admin' ? "hidden" : "block"}`}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}

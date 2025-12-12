@@ -4,6 +4,8 @@ import AdBanner from "@/components/layout/AdBanner";
 import {  Users, Target, Award, TrendingUp, Building2, Briefcase } from "lucide-react";
 import { AnimatedNumber } from "@/components/ui/animate-number";
 import SubscriptionPlans from "@/components/ui/subscriptions_plan";
+import ContactButton from "@/components/ui/support";
+import { Link } from "react-router-dom";
 
 const Employers = () => {
  
@@ -116,6 +118,7 @@ const Employers = () => {
           </Card>
         </section>
       </div>
+      <ContactButton/>
     </div>
   );
 };

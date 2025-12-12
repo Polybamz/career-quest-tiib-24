@@ -21,6 +21,7 @@ import JobSeekerProfile from "./pages/JobSeekerProfile";
 import JobSeekerPortal from "./pages/JobSeekerPortal";
 import CookieConsentBanner from "./components/ui/cookies_concent";
 import AppRouter from "./AppRouter";
+import AdminLayout from "./components/layout/Adminlayout";
 
 
 const queryClient = new QueryClient();
@@ -40,6 +41,15 @@ const App = () => (
             <Footer />
             <MobileNav />
           </div>
+          
+          <Routes>
+             <Route path="/admin" element={<AdminLayout/>}>
+                 <Route path="/admin/" element={<div>Comming soon .......</div>}/>
+                   <Route path="/admin/jobs_listing" element={<div>Comming soon Jobs .......</div>}/>
+                  <Route path="/admin/analytics" element={<div>Comming soon .......</div>}/>
+                </Route>
+          </Routes>
+          
         </BrowserRouter>
         <CookieConsentBanner/>
       </TooltipProvider>

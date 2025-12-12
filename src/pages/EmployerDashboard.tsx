@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useJobs } from "@/context/useJobContext";
 import SubscriptionPlans from '@/components/ui/subscriptions_plan';
 import { PLAN_PRE, hasPermission, SubsPlan } from '@/types/subs_type';
-
+import useSubscription from '@/hooks/useSubscribe';
 interface Job {
   id: string;
   title: string;
@@ -42,6 +42,8 @@ interface Job {
 
 const EmployerDashboard = () => {
   const { user, logout } = useAuth();
+  const {getSubsState,
+        fetchUserSubscription } = useSubscription()
   const { toast } = useToast();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -230,11 +232,12 @@ const EmployerDashboard = () => {
 
   const handleDelete = async (jobId: string) => {
     try {
-      await deleteDoc(doc(db, 'jobs', jobId));
-      toast({
-        title: "Success",
-        description: "Job deleted successfully",
-      });
+      await deleteJob(jobId);
+      // await deleteDoc(doc(db, 'jobs', jobId));
+      // toast({
+      //   title: "Success",
+      //   description: "Job deleted successfully",
+      // });
       //fetchJobs();
     } catch (error) {
       console.error('Error deleting job:', error);
@@ -276,18 +279,18 @@ const EmployerDashboard = () => {
     }
   },[employerJobState.success, employerJobState['data']])
 console.log(employerJobState)
-console.log(user)
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card>
-          <CardContent className="p-6">
-            <p>Please log in to access the employer dashboard.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+console.log(user!)
+  // if (!user) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <p>Please log in to access the employer dashboard.</p>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
 
  
 
@@ -299,7 +302,7 @@ console.log(user)
           <p className="text-muted-foreground">Welcome back, {user.name}</p>
           <div className="mt-2 flex items-center gap-3">
             <Badge variant="outline">Plan: {userPlan}</Badge>
-            <Button size="sm" variant="ghost" onClick={() => setIsSubscribed(false)}>Manage Plan</Button>
+            {/* <Button size="sm" variant="ghost" onClick={() => setIsSubscribed(false)}>Manage Plan</Button> */}
           </div>
         </div>
         <Button onClick={logout} variant="outline">

@@ -127,7 +127,7 @@ const JobSeekerProfile = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name *</Label>
+                  <Label htmlFor="fullName">Full Name <span className='text-red-600'>*</span></Label>
                   <Input
                     id="fullName"
                     value={formData.fullName}
@@ -136,7 +136,7 @@ const JobSeekerProfile = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
                   <Input
                     id="email"
                     type="email"
@@ -150,7 +150,7 @@ const JobSeekerProfile = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Label htmlFor="phone">Phone Number <span className='text-red-600'>*</span></Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -160,7 +160,7 @@ const JobSeekerProfile = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location *</Label>
+                  <Label htmlFor="location">Location <span className='text-red-600'>*</span></Label>
                   <Input
                     id="location"
                     value={formData.location}
@@ -181,7 +181,7 @@ const JobSeekerProfile = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="education">Highest Degree *</Label>
+                  <Label htmlFor="education">Highest Degree <span className='text-red-600'>*</span></Label>
                   <Select value={formData.education} onValueChange={(value) => handleInputChange('education', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select degree" />
@@ -192,11 +192,12 @@ const JobSeekerProfile = () => {
                       <SelectItem value="phd">PhD</SelectItem>
                       <SelectItem value="diploma">Diploma</SelectItem>
                       <SelectItem value="certificate">Certificate</SelectItem>
+                      <SelectItem value="others">Others</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="university">University/Institution *</Label>
+                  <Label htmlFor="university">University/Institution <span className='text-red-600'>*</span></Label>
                   <Input
                     id="university"
                     value={formData.university}
@@ -205,7 +206,7 @@ const JobSeekerProfile = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="graduationYear">Graduation Year *</Label>
+                  <Label htmlFor="graduationYear">Graduation Year <span className='text-red-600'>*</span></Label>
                   <Input
                     id="graduationYear"
                     type="number"
@@ -228,7 +229,7 @@ const JobSeekerProfile = () => {
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="experience">Years of Experience *</Label>
+                  <Label htmlFor="experience">Years of Experience <span className='text-red-600'>*</span></Label>
                   <Select value={formData.experience} onValueChange={(value) => handleInputChange('experience', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select experience range" />
@@ -243,7 +244,7 @@ const JobSeekerProfile = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="skills">Key Skills *</Label>
+                  <Label htmlFor="skills">Key Skills <span className='text-red-600'>*</span></Label>
                   <Textarea
                     id="skills"
                     value={formData.skills}
@@ -255,7 +256,7 @@ const JobSeekerProfile = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="certifications">Professional Certifications *</Label>
+                  <Label htmlFor="certifications">Professional Certifications <span className='text-red-600'>*</span></Label>
                   <Textarea
                     id="certifications"
                     value={formData.certifications}
@@ -302,7 +303,7 @@ const JobSeekerProfile = () => {
             {/* Professional Summary */}
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="summary">Professional Summary *</Label>
+                <Label htmlFor="summary">Professional Summary <span className='text-red-600'>*</span></Label>
                 <Textarea
                   id="summary"
                   value={formData.summary}
