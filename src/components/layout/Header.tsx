@@ -22,9 +22,9 @@ const Header = () => {
     { name: "TIIB", href: "/tiib" },
     { name: "Contact", href: "/contact" },
   ];
-console.log('////// path', location.pathname.split('/')[1])
+  console.log('////// path', location.pathname.split('/')[1])
   return (
-    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${location.pathname == '/tiib' ? "hidden" :location.pathname.split('/')[1] == 'admin' ? "hidden" : "block"}`}>
+    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${location.pathname == '/tiib' ? "hidden" : location.pathname.split('/')[1] == 'employer-dashboard' ? "hidden" : "block"}`}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -32,25 +32,25 @@ console.log('////// path', location.pathname.split('/')[1])
             <div className="h-12 w-12 rounded bg-muted">
               {location.pathname == '/tiib' &&
                 (
-                 <img src={`${tiiblogo}`} alt="TIIB logo" className="rounded" />
+                  <img src={`${tiiblogo}`} alt="TIIB logo" className="rounded" />
                 )
               }
               {location.pathname !== '/tiib' && (
                 <img src={`${logo}`} alt="logo" className="rounded" />
-                ) }
+              )}
             </div>
             <div className="flex flex-col justify-center h-[0px] items-start">
-              { location.pathname == '/tiib' ? (
-                   <span className="text-xl font-bold text-secondary">TIIB</span>
+              {location.pathname == '/tiib' ? (
+                <span className="text-xl font-bold text-secondary">TIIB</span>
               ) : (
-                 <span className="text-xl font-bold text-primary">YoCaCo</span>
+                <span className="text-xl font-bold text-primary">YoCaCo</span>
               )}
-             
-              { location.pathname == '/tiib' ? (
-              <span className=" font-[400] text-[12px] text-secondary">The Institute of Integrity Building
-</span>
+
+              {location.pathname == '/tiib' ? (
+                <span className=" font-[400] text-[12px] text-secondary">The Institute of Integrity Building
+                </span>
               ) : (
-              <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
+                <span className=" font-[400] text-[12px] text-primary">Your Career Companion</span>
               )}
 
 
@@ -64,8 +64,8 @@ console.log('////// path', location.pathname.split('/')[1])
                 key={item.name}
                 to={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname == '/tiib' ? 'text-secondary' : location.pathname === item.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  ? "text-primary"
+                  : "text-muted-foreground"
                   }`}
               >
                 {item.name}
@@ -92,17 +92,28 @@ console.log('////// path', location.pathname.split('/')[1])
                     to={item.href}
                     onClick={() => setIsOpen(false)}
                     className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/tiib' && 'text-secondary'} ${location.pathname === item.href
-                        ? "text-primary"
-                        : "text-muted-foreground"
+                      ? "text-primary"
+                      : "text-muted-foreground"
                       }`}
                   >
                     {item.name}
                   </Link>
                 ))}
 
-                 {user ? (<Link  onClick={() => setIsOpen(false)} to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
-              Sign In
-            </Link>)}
+                {user ? (<Link
+                  onClick={() => setIsOpen(false)}
+                  to={{
+                    pathname: user.userType == 'employer' ?
+                      '/employer-dashboard' :
+                      '/job-seeker-portal',
+                    search:`id=${user.uid}`
+                  }}
+                  className="py-1 px-4 rounded-sm text-white bg-primary ">
+                  Portal
+                </Link>)
+                  : (<Link to={'/auth'} className="py-1 px-4 rounded-sm text-white bg-primary ">
+                    Sign In
+                  </Link>)}
               </div>
             </SheetContent>
           </Sheet>

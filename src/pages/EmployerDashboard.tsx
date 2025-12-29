@@ -13,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Edit, Trash2, MapPin, Calendar, DollarSign, Building, BarChart3, TrendingUp, Users, Eye } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { db, getJobAnalytics } from '../../firebase';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { useJobs } from "@/context/useJobContext";
 import SubscriptionPlans from '@/components/ui/subscriptions_plan';
@@ -52,7 +51,7 @@ const EmployerDashboard = () => {
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const { getJobByEmployerId, employerJobState, addJob,deleteJob, addJobState,updateJob,updateJobState, deleteJobState } = useJobs();
   // derive subscription plan from user object if available
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(true)
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
   // Form state, updated to match Job interface
   const [formData, setFormData] = useState({
     title: '',
@@ -299,7 +298,7 @@ console.log(user!)
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Employer Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, {user.name}</p>
+          <p className="text-muted-foreground">Welcome back, {user?.name}</p>
           <div className="mt-2 flex items-center gap-3">
             <Badge variant="outline">Plan: {userPlan}</Badge>
             {/* <Button size="sm" variant="ghost" onClick={() => setIsSubscribed(false)}>Manage Plan</Button> */}

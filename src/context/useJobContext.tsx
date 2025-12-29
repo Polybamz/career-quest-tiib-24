@@ -38,6 +38,13 @@ interface UseJobsHook {
     success: boolean | null;
     error: string | null;
   };
+  employerJobAnalisticsState: {
+    loading: boolean;
+    success: boolean | null;
+    error: string | null;
+    data: any;
+  };
+  getEmployerJobAnalytics: (employerId: string) => Promise<void>;
 }
 
 /**
@@ -59,6 +66,13 @@ export const useJobs = (): UseJobsHook => {
   const [addError, setAddError] = useState<string | null>(null);
   const [jobAdded, setJobAdded] = useState<boolean>(false);
   const [employerJobState, setEmployerJobState] = useState({
+    loading: false,
+    success: null,
+    error: null,
+    data: null
+  });
+
+  const [employerJobAnalisticsState, setEmployerJobAnalyticsState] = useState({
     loading: false,
     success: null,
     error: null,
@@ -213,6 +227,27 @@ export const useJobs = (): UseJobsHook => {
       console.error("Update Job Error:", err);
     }
   };
+  // get job analytics by employer id
+  const getJobAnalyticsByEmployerId = async (employerId: string) => {
+    setEmployerJobAnalyticsState({ loading: true, success: null, error: null, data: null });
+    try {
+      const response = await fetch(`${BASE_URL}jobs/get-employer-job-analytics/${employerId}`, {  
+        method: "GET",
+        headers: getAuthHeaders(),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to fetch jobs: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log('Fetched Jobs:', data);
+      setEmployerJobAnalyticsState({ loading: false, success: true, error: null, data: data });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error occurred while fetching jobs";
+      setEmployerJobAnalyticsState({ loading: false, success: false, error: message, data: null });
+      console.error("Fetch Jobs Error:", err);
+    }
+  }
   // useEffect to reset jobAdded after successful addition
   useEffect(() => {
   }, []);
@@ -241,6 +276,8 @@ export const useJobs = (): UseJobsHook => {
       success: jobAdded
     },
     getJobByEmployerId,
-    employerJobState
+    employerJobState,
+    employerJobAnalisticsState,
+    getEmployerJobAnalytics: getJobAnalyticsByEmployerId
   };
 };

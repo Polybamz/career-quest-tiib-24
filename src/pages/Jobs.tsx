@@ -35,26 +35,35 @@ const Jobs = () => {
   const [jobType, setJobType] = useState("");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  
-   useScrollAnimation();
-   const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
-   const { jobs: loadedJobs, isLoading: jobLoading, error: jobError } = useJobs();
 
-  
+  useScrollAnimation();
+
+  const { jobs: loadedJobs, isLoading: jobLoading, error: jobError } = useJobs();
+
+
+  const screenWidth = useMemo(() => {
+    return typeof window !== "undefined" ? window.innerWidth : 0;
+  }, [])
+
+  console.log('screen width...................', screenWidth)
+  const boostedJobs = useMemo(() => {
+    if (jobLoading) return [];
+    return loadedJobs.filter(job => job.boosted !== null)
+  }, [loadedJobs])
 
   const filteredJobs = loadedJobs || useMemo(() => {
     return loadedJobs?.filter(job => {
       const searchTermLower = searchTerm.toLowerCase();
       const locationLower = location.toLowerCase();
-      
-      const matchesSearch = !searchTerm || 
+
+      const matchesSearch = !searchTerm ||
         job.title.toLowerCase().includes(searchTermLower) ||
         job.company.toLowerCase().includes(searchTermLower) ||
         job.tags.some(tag => tag.toLowerCase().includes(searchTermLower));
-        
+
       const matchesLocation = !location || job.location.toLowerCase().includes(locationLower);
       const matchesType = !jobType || job.type === jobType;
-      
+
       return matchesSearch && matchesLocation && matchesType;
     });
   }, [loadedJobs, searchTerm, location, jobType]);
@@ -77,17 +86,17 @@ const Jobs = () => {
   };
 
   type Job = typeof loadedJobs[0];
-  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',loadedJobs)
+  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', loadedJobs)
 
-  
+
 
   return (
     <div className="lg:min-h-screen bg-muted/20 w-full">
       {/* --- Top Banner Ad --- */}
-       <div className="w-full flex justify-center items-center">
+      <div className="w-full flex justify-center items-center">
         <AdBanner position="top" />
-       </div>
-    
+      </div>
+
 
       <div className="container mx-auto px-4 py-8">
         {/* --- Header --- */}
@@ -134,21 +143,21 @@ const Jobs = () => {
             </div>
           </CardContent>
         </Card>
-      <div className="flex flex-col gap-4 lg:hidden">
-        {
-          jobLoading && <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">Loading jobs...</p>
-          </div>
-        }
-        {
-          jobError && <div className="w-full text-center py-12 h-34 flex flex-col justify-center items-center">
-            <p className="text-lg text-muted-foreground">Error loading jobs: {jobError}</p>
-            {/* <button onClick={() => useJobs()}>Try Again</button> */}
-            </div>
-        }
+        <div className="flex flex-col gap-4 lg:hidden">
           {
-         !jobLoading &&  filteredJobs?.map((job, index)=>(
-             <Card key={index} className="sticky top-24 overflow-y-auto shadow-sm">
+            jobLoading && <div className="text-center py-12">
+              <p className="text-lg text-muted-foreground">Loading jobs...</p>
+            </div>
+          }
+          {
+            jobError && <div className="w-full text-center py-12 h-34 flex flex-col justify-center items-center">
+              <p className="text-lg text-muted-foreground">Error loading jobs: {jobError}</p>
+              {/* <button onClick={() => useJobs()}>Try Again</button> */}
+            </div>
+          }
+          {
+            !jobLoading && filteredJobs?.map((job, index) => (
+              <Card key={index} className="sticky top-24 overflow-y-auto shadow-sm">
                 <CardHeader>
                   <div className="flex gap-4 items-start">
                     <img src={job.logoUrl} alt={`${job.company} logo`} className="h-16 w-16 rounded-lg bg-muted" />
@@ -166,41 +175,41 @@ const Jobs = () => {
                 <CardContent>
                   <div className="flex gap-2 mb-6">
                     <Button onClick={() => handleApply(job)} className="flex-1 h-11 text-base">
-                      {job.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2"/> : <Mail className="h-4 w-4 mr-2"/>}
+                      {job.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2" /> : <Mail className="h-4 w-4 mr-2" />}
                       Apply Now
                     </Button>
                     <Button variant="outline" className="h-11">Save Job</Button>
                   </div>
 
                   <div className="space-y-6">
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
-                        <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{job.salary}</p>
-                     </div>
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Job Description</h4>
-                        <p className="text-muted-foreground whitespace-pre-line">{job.description}</p>
-                     </div>
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {job.tags.map((tag, index) => (
-                            <Badge key={index} variant="outline" className="text-sm py-1 px-3">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                     </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
+                      <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{job.salary}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Job Description</h4>
+                      <p className="text-muted-foreground whitespace-pre-line">{job.description}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {job.tags.map((tag, index) => (
+                          <Badge key={index} variant="outline" className="text-sm py-1 px-3">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-          ))
-        }
+            ))
+          }
 
-      </div>
+        </div>
         {/* --- Main Content: Two-Column Layout --- */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-lg:hidden">
-          
+
           {/* --- Left Column: Job List --- */}
           <div className="lg:col-span-5 xl:col-span-4">
             <h2 className="text-xl font-semibold mb-4">
@@ -209,8 +218,8 @@ const Jobs = () => {
             <div className="space-y-3  pr-2">
               {filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
-                  <Card 
-                    key={job.id} 
+                  <Card
+                    key={job.id}
                     onClick={() => setSelectedJob(job)}
                     className={cn(
                       "cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary",
@@ -223,19 +232,19 @@ const Jobs = () => {
                         <p className="text-sm text-muted-foreground">{job.company}</p>
                         <h3 className="font-semibold text-base leading-tight">{job.title}</h3>
                         <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1">
-                           <div className="flex items-center gap-1"><MapPin size={12} /> {job.location}</div>
-                           <div className="flex items-center gap-1"><DollarSign size={12} /> {job.salary.split(' ')[0]}</div>
-                           <div className="flex items-center gap-1"><Briefcase size={12} /> {job.type}</div>
+                          <div className="flex items-center gap-1"><MapPin size={12} /> {job.location}</div>
+                          <div className="flex items-center gap-1"><DollarSign size={12} /> {job.salary.split(' ')[0]}</div>
+                          <div className="flex items-center gap-1"><Briefcase size={12} /> {job.type}</div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 ))
               ) : (
-                 <div className="text-center py-12">
-                   <p className="text-lg text-muted-foreground">No jobs found.</p>
-                   <p className="text-sm text-muted-foreground mt-1">Try adjusting your search filters.</p>
-                 </div>
+                <Card className="text-center py-12">
+                  <p className="text-lg text-muted-foreground">No jobs found.</p>
+                  <p className="text-sm text-muted-foreground mt-1">Try adjusting your search filters.</p>
+                </Card>
               )}
             </div>
           </div>
@@ -261,31 +270,31 @@ const Jobs = () => {
                 <CardContent>
                   <div className="flex gap-2 mb-6">
                     <Button onClick={() => handleApply(selectedJob)} className="flex-1 h-11 text-base">
-                      {selectedJob.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2"/> : <Mail className="h-4 w-4 mr-2"/>}
+                      {selectedJob.applyType === 'external' ? <ExternalLink className="h-4 w-4 mr-2" /> : <Mail className="h-4 w-4 mr-2" />}
                       Apply Now
                     </Button>
                     <Button variant="outline" className="h-11">Save Job</Button>
                   </div>
 
                   <div className="space-y-6">
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
-                        <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{selectedJob.salary}</p>
-                     </div>
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Job Description</h4>
-                        <p className="text-muted-foreground whitespace-pre-line">{selectedJob.description}</p>
-                     </div>
-                     <div>
-                        <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedJob.tags.map((tag, index) => (
-                            <Badge key={index} variant="outline" className="text-sm py-1 px-3">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                     </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Salary Range</h4>
+                      <p className="text-primary font-medium bg-primary/10 px-3 py-2 rounded-md inline-block">{selectedJob.salary}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Job Description</h4>
+                      <p className="text-muted-foreground whitespace-pre-line">{selectedJob.description}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-2">Skills & Requirements</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedJob.tags.map((tag, index) => (
+                          <Badge key={index} variant="outline" className="text-sm py-1 px-3">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -299,7 +308,7 @@ const Jobs = () => {
           </div>
         </main>
       </div>
-      <ContactButton/>
+      <ContactButton />
     </div>
   );
 };

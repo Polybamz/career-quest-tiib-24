@@ -1,7 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { Menu, Bell, LayoutDashboard, Briefcase, Users, Building2, CreditCard, FileText, Settings, User , LogOut} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Menu, Bell, LayoutDashboard, Briefcase, Users, Building2, CreditCard, FileText, Settings, User , LogOut, Settings2} from "lucide-react";
 interface NavItem {
     id: string;
     label: string;
@@ -19,20 +20,20 @@ const navigation: NavSection[] = [
     {
         title: "Overview",
         items: [
-            { id: "dashboard", label: "Overview", icon: LayoutDashboard, href: "/admin" }
+            { id: "dashboard", label: "Overview", icon: LayoutDashboard, href: "/employer-dashboard" }
         ]
     },
     {
         title: "Jobs Management",
         items: [
-            { id: "jobs", label: "Job Management", icon: Briefcase, href: "/admin/jobs_listing" },
+            { id: "jobs", label: "Job Management", icon: Briefcase, href: "/employer-dashboard/jobs_listing" },
 
         ]
     },
     {
-        title: "Subscriptions Management",
+        title: "Use Management",
         items: [
-            { id: "subscription", label: "User Subscription", icon: CreditCard, href: "/subscription" },
+            { id: "setting", label: "Settings", icon: Settings, href: "/employer-dashboard/settings" },
 
         ]
     },
@@ -42,6 +43,8 @@ const navigation: NavSection[] = [
 
 const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
+    const {user, logout} = useAuth()
+    const    [isActive, setIsActive] = useState<boolean>(false)
     return (
         <div className="w-full min-h-screen flex border">
             <aside className=" fixed left-0 top-0 z-40 h-screen  border-red-200 transition-all duration-300 ease-smooth w-64 max-lg:w-16">
@@ -62,7 +65,7 @@ const AdminLayout = () => {
                     {/* Navigation */}
                     <nav className="flex-1 space-y-2 p-4">
                         {navigation.map((section) => (
-                            <div key={section.title} className="space-y-1">
+                            <div key={section.title} className="space-y-1 flex-1">
                                 {sidebarOpen && (
                                     <p className="px-3 text-xs font-medium text-muted-foreground uppercase tracking-wide max-lg:hidden">
                                         {section.title}
@@ -70,8 +73,9 @@ const AdminLayout = () => {
                                 )}
                                 {section.items.map((item) => {
                                     const Icon = item.icon;
-                                    const isActive = `${location.pathname}` === item.href;
-                                      console.log('////////////////////////////////////',`${location.pathname}` )
+                                   
+                                     const isActive = `${location.pathname}` === item.href;
+                                    //   setIsActive( Active )
                                     return (
                                         <Button
                                             key={item.id}
@@ -79,7 +83,7 @@ const AdminLayout = () => {
                                             className={`w-full justify-center md:justify-start items-center gap-3 ${!sidebarOpen && "px-3"}`}
                                             asChild
                                         >
-                                            <Link to={item.href} title={item.label}>
+                                            <Link to={{pathname:item.href, search: `id=${user?.uid}`}} title={item.label}>
                                                 <Icon className="h-4 w-4 flex-shrink-0" />
 
                                                 <div className={`max-lg:hidden`}>
@@ -100,15 +104,15 @@ const AdminLayout = () => {
 
                         ))}
                         <div className="flex-1"></div>
-                        <Button variant="link"   onClick={() => { }}><LogOut/> <span className="text-black max-lg:hidden">Log Out</span></Button>
+                        <Button variant="link"   onClick={() => {logout}}><LogOut/> <span className="text-black max-lg:hidden">Log Out</span></Button>
                     </nav>
                     
                 </div>
             </aside>
             {/* Main Content */}
             <div className={`transition-all w-full duration-300 ease-smooth border-l  lg:ml-64 ml-16`}>
-                <header className="sticky top-0 z-30 flex h-16 items-center justify-between shadow-sm bg-background/95 backdrop-blur-sm px-6">
-                    <div className="flex items-center gap-4">
+                <header className="sticky top-0 z-30 flex h-16 items-center shadow-sm bg-background/95 backdrop-blur-sm px-6">
+                    <div className="flex items-center gap-4 mr-auto">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -119,7 +123,7 @@ const AdminLayout = () => {
                         </Button>
                         <h1 className="text-lg font-semibold">Employer Dashboard</h1>
                     </div>
-
+                     <p>{user?.name}</p>
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" className="relative">
                             <Bell className="h-4 w-4" />

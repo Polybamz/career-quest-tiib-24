@@ -29,7 +29,7 @@ const Footer = () => {
 
 
   return (
-    <footer className={`hidden  bg-muted z-100 border-t ${location.pathname == '/employer-dashboard' ? 'hidden  ' : location.pathname.split('/')[1] == 'admin' ? "hidden" : 'md:block'}`}>
+    <footer className={`hidden  bg-muted z-100 border-t ${location.pathname == '/employer-dashboard' ? 'hidden  ' : location.pathname.split('/')[1] == 'employer-dashboard' ? "hidden":location.pathname.split('/')[1] == 'add-job' ? "hidden"  : 'md:block'}`}>
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

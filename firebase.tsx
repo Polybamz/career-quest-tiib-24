@@ -211,36 +211,121 @@ export const getJobSeekerProfile = async (uid: string) => {
 };
 
 // Analytics functions
+// export const getJobAnalytics = async (employerId: string) => {
+//   console.log('Fetching job analytics for employer:', employerId);
+//   try {
+//     const jobsRef = collection(db, 'jobs');
+//     console.log('Jobs reference:', jobsRef);
+//     const q = query(jobsRef, where('employerId', '==', employerId));
+//     console.log('Query:', q);
+//     const querySnapshot = await getDocs(q);
+//     console.log('Query snapshot:', querySnapshot);
+//     const jobs = querySnapshot.docs.map(doc => ({
+//       id: doc.id,
+//       ...doc.data()
+//     })) as Job[];
+//  console.log('Fetched jobs for analytics:', jobs);
+//     // Generate analytics data
+//     const totalJobs = jobs.length;
+//     const activeJobs = jobs.filter(job => job.status === 'active').length;
+//     const pendingJobs = jobs.filter(job => job.status === 'pending').length;
+//     const closedJobs = jobs.filter(job => job.status === 'closed').length;
+
+//     // Monthly job postings (mock data for demo)
+//     const monthlyData = [
+//       { month: 'Jan', jobs: Math.floor(Math.random() * 10) + 1 },
+//       { month: 'Feb', jobs: Math.floor(Math.random() * 10) + 1 },
+//       { month: 'Mar', jobs: Math.floor(Math.random() * 10) + 1 },
+//       { month: 'Apr', jobs: Math.floor(Math.random() * 10) + 1 },
+//       { month: 'May', jobs: Math.floor(Math.random() * 10) + 1 },
+//       { month: 'Jun', jobs: totalJobs },
+//     ];
+
+//     // Job type distribution
+//     const jobTypes = jobs.reduce((acc, job) => {
+//       acc[job.type] = (acc[job.type] || 0) + 1;
+//       return acc;
+//     }, {});
+
+//     const typeData = Object.entries(jobTypes).map(([type, count]) => ({
+//       type: type.replace('-', ' '),
+//       count,
+//     }));
+
+//     return {
+//       totalJobs,
+//       activeJobs,
+//       pendingJobs,
+//       closedJobs,
+//       monthlyData,
+//       typeData,
+//       applicationStats: {
+//         totalApplications: totalJobs * Math.floor(Math.random() * 50) + 10,
+//         averagePerJob: Math.floor(Math.random() * 25) + 5,
+//       }
+//     };
+//   } catch (error) {
+//     console.error('Error fetching analytics:', error);
+//     throw error;
+//   }
+// };
+// ...existing code...
 export const getJobAnalytics = async (employerId: string) => {
+  console.log('Fetching job analytics for employer:', employerId);
   try {
     const jobsRef = collection(db, 'jobs');
     const q = query(jobsRef, where('employerId', '==', employerId));
     const querySnapshot = await getDocs(q);
-    
+
     const jobs = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })) as Job[];
 
     // Generate analytics data
-    const totalJobs = jobs.length;
+    const totalJobs = Array.isArray(jobs) ? jobs.length : 0;
     const activeJobs = jobs.filter(job => job.status === 'active').length;
     const pendingJobs = jobs.filter(job => job.status === 'pending').length;
     const closedJobs = jobs.filter(job => job.status === 'closed').length;
 
-    // Monthly job postings (mock data for demo)
-    const monthlyData = [
-      { month: 'Jan', jobs: Math.floor(Math.random() * 10) + 1 },
-      { month: 'Feb', jobs: Math.floor(Math.random() * 10) + 1 },
-      { month: 'Mar', jobs: Math.floor(Math.random() * 10) + 1 },
-      { month: 'Apr', jobs: Math.floor(Math.random() * 10) + 1 },
-      { month: 'May', jobs: Math.floor(Math.random() * 10) + 1 },
-      { month: 'Jun', jobs: totalJobs },
-    ];
+    // Helper to safely parse a job date
+    const getJobDate = (job: any): Date | null => {
+      const maybe = job.createdAt ?? job.postedDate ?? job.expiryDate;
+      if (!maybe) return null;
+      // Firestore Timestamp
+      if (typeof maybe === 'object' && typeof maybe.toDate === 'function') {
+        return maybe.toDate();
+      }
+      // ISO string or epoch
+      const d = new Date(maybe);
+      return isNaN(d.getTime()) ? null : d;
+    };
 
-    // Job type distribution
-    const jobTypes = jobs.reduce((acc, job) => {
-      acc[job.type] = (acc[job.type] || 0) + 1;
+    // Monthly job postings for the last 6 months (counts based on created/posted date if available)
+    const now = new Date();
+    const months: { key: string; label: string; start: Date; end: Date }[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const start = new Date(dt.getFullYear(), dt.getMonth(), 1, 0, 0, 0);
+      const end = new Date(dt.getFullYear(), dt.getMonth() + 1, 1, 0, 0, 0);
+      const label = dt.toLocaleString('default', { month: 'short' });
+      months.push({ key: `${dt.getFullYear()}-${dt.getMonth()}`, label, start, end });
+    }
+
+    const monthlyData = months.map(m => {
+      const count = jobs.reduce((acc, job) => {
+        const d = getJobDate(job);
+        if (!d) return acc;
+        if (d >= m.start && d < m.end) return acc + 1;
+        return acc;
+      }, 0);
+      return { month: m.label, jobs: count };
+    });
+
+    // Job type distribution (typed accumulator)
+    const jobTypes = jobs.reduce<Record<string, number>>((acc, job) => {
+      const t = (job.type || 'unknown') as string;
+      acc[t] = (acc[t] || 0) + 1;
       return acc;
     }, {});
 
@@ -257,8 +342,9 @@ export const getJobAnalytics = async (employerId: string) => {
       monthlyData,
       typeData,
       applicationStats: {
-        totalApplications: totalJobs * Math.floor(Math.random() * 50) + 10,
-        averagePerJob: Math.floor(Math.random() * 25) + 5,
+        // placeholder values — replace with real application counts if available
+        totalApplications: totalJobs * (Math.floor(Math.random() * 50) + 10),
+        averagePerJob: totalJobs > 0 ? Math.round((Math.floor(Math.random() * 25) + 5)) : 0,
       }
     };
   } catch (error) {
@@ -266,5 +352,5 @@ export const getJobAnalytics = async (employerId: string) => {
     throw error;
   }
 };
-
+// ...existing code...
 export default app; 

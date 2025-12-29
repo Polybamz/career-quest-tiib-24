@@ -5,12 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogHeader, DialogContent, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "./label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./input";
 import { useAuth } from "@/hooks/useAuth";
 import useSubscription from "@/hooks/useSubscribe";
 import { Link } from "react-router-dom";
-
+import { useToast } from "./use-toast";
 const SubscriptionPlans = () => {
   const [showModal, setShowModal] = useState(false);
   const [showOneTimeModal, setShowOneTimeModal] = useState(false);
@@ -80,10 +80,10 @@ const SubscriptionPlans = () => {
     setAmount(numeric.toLocaleString());
     setPlan(planName);
 
-    // if (!user) {
-    //   setOpenLoginPrompt(true);
-    //   return;
-    // }
+    if (!user) {
+      setOpenLoginPrompt(true);
+      return;
+    }
 
     setShowModal(true);
   };
@@ -96,10 +96,10 @@ const SubscriptionPlans = () => {
     setPlan(type);
     // setAmount((rate * days).toLocaleString());
 
-    // if (!user) {
-    //   setOpenLoginPrompt(true);
-    //   return;
-    // }
+    if (!user) {
+      setOpenLoginPrompt(true);
+      return;
+    }
 
     setShowOneTimeModal(true);
   };
@@ -275,6 +275,7 @@ function SubscriptionDialog({ showModal, setShowModal, plan, amount, duration }:
   const [transactionId, setTransactionId] = useState('')
   const { createSubscription, subscriptionState } = useSubscription()
   const { user } = useAuth()
+  const { toast } = useToast();
 
   const [dataError, setDataErro] = useState({
     email: null,
@@ -297,6 +298,23 @@ function SubscriptionDialog({ showModal, setShowModal, plan, amount, duration }:
     await createSubscription({ ...payload })
 
   }
+
+  useEffect(() => {
+    if (subscriptionState.success) {
+      setShowModal(false)
+      toast({
+        title: "Subscription Successful",
+        description: `You have successfully subscribed to the ${plan} plan.`,
+        duration: 5000,
+      });
+    }
+    if (subscriptionState.error) {
+      toast({
+        title: "Subscription Failed",
+        description: subscriptionState.error,
+        duration: 5000,
+      });}
+  }, [subscriptionState.success, subscriptionState.error])
 
   return (
     <Dialog open={showModal} onOpenChange={setShowModal} >
@@ -356,7 +374,8 @@ function SubscriptionDialog({ showModal, setShowModal, plan, amount, duration }:
 
             <TabsContent value="MOMO" className="space-y-2 mt-3">
               <Label>MOMO Number</Label>
-              <p>Dial <strong>*126#</strong> send ${amount}/{600 * amount}XAF to 681095720</p>
+              <p>Dial <strong>*126#</strong> send <strong>${amount} / {600 * amount}XAF</strong> to <strong>674542410</strong></p>
+              <p>Name: <strong>Sahfua Asamaou Ayinuih</strong></p>
               <p>Copy the transaction ID and submit </p>
               <Input value={transactionId} onChange={(e) => setTransactionId(e.target.value)} placeholder="Enter your MOMO transaction ID" />
             </TabsContent>
@@ -378,8 +397,10 @@ function SubscriptionDialog({ showModal, setShowModal, plan, amount, duration }:
 
             <TabsContent value="OrangeMoney" className="space-y-2 mt-3">
               <Label>Orange Money Number</Label>
-              <p></p>
-              <Input placeholder="Enter your Transaction ID" />
+              <p>Dial <strong>*144#</strong> send <strong>${amount} / {600 * amount}XAF</strong> to <strong>696452444</strong></p>
+              <p>Name: <strong>Ngwuang Dieudonne Nyianchi</strong></p>
+              <p>Copy the transaction ID and submit </p>
+              <Input placeholder="Enter your Transaction ID" onChange={e=> setTransactionId(e.target.value)} />
             </TabsContent>
             {dataError.transactionId && <p className="text-red-400 italic text-sm">{dataError.transactionId}</p>}
 
@@ -391,7 +412,7 @@ function SubscriptionDialog({ showModal, setShowModal, plan, amount, duration }:
           <Button variant="outline" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button onClick={handleSubmit} disabled={subscriptionState.loading || !transactionId}>
             {subscriptionState.loading ? 'Subscribing...' : 'Subscribe'}
           </Button>
         </DialogFooter>

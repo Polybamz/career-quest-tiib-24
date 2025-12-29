@@ -70,9 +70,31 @@ const useSubscription = () => {
             ...getSubsState,
             loaing: true
         })
+        console.log('/////////////////////////////////////////////////////',userId)
         try {
+     console.log(`${BASE_URL}/subscription/emloyer-subscription/${userId}`)
+
+            const response = await fetch(`${BASE_URL}/subscription/emloyer-subscription/${userId}`, {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" },
+            }
+            )
+     // LOG URL
+            console.log('Response:', response)
+
+            if (!response.ok) throw Error('Error fetching subscription')
+
+            const data =await response.json()
+            console.log('dddddddddddddddddddddddddddddddddddddddddddddddd',data)
+
+            setGetSubsState({
+                loaing: false,
+                error: null,
+                subdcription: data
+            })
 
         } catch (er) {
+            console.error('Error fetching subscription:', er)
             setGetSubsState({
                 loaing: false,
                 error: er,
@@ -81,12 +103,26 @@ const useSubscription = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const rawUser = Cookies.get('user')
+        let userObj: { uid?: string } | null = null
+        try {
+            userObj = rawUser ? JSON.parse(rawUser) : null
+        } catch (e) {
+            console.error('Failed to parse user cookie', e)
+            userObj = null
+        }
+        if (userObj?.uid) {
+            fetchUserSubscription(userObj.uid)
+        }
+    }, [fetchUserSubscription])
+
 
     return {
         subscriptionState,
         createSubscription,
         getSubsState,
-        fetchUserSubscription
+        
     }
 
 }

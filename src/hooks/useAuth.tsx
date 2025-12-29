@@ -10,6 +10,7 @@ interface AuthUser {
   name: string | null;
   userType: "jobseeker" | "employer";
   profileComplete: boolean;
+  isSubscribed: boolean | null
 }
 
 interface AsyncState {
@@ -115,7 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!response.ok) throw new Error("Invalid email or password");
 
       const data = await response.json();
-      Cookies.set("user", JSON.stringify(data.user));
+      Cookies.set("user", JSON.stringify(data.user), { expires: 7 });
       setUser(data.user);
 
       setLoginState({ loading: false, error: null, success: true });
@@ -171,7 +172,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const updatedUser = { ...user, ...updates };
     setUser(updatedUser);
-    Cookies.set("user", JSON.stringify(updatedUser));
+    Cookies.set("user", JSON.stringify(updatedUser), { expires: 7 });
   };
   /// job seacker profile
   const createUpdateJSProfile = useCallback(async (data: any, id: string) => {
@@ -245,6 +246,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
     }
   }, [])
+
+  //user by id
+  const getUserById = async (id: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}auth/get-user-by-id/${id}`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" },
+      })
+      if (!response.ok) throw Error('error fetching user')
+      const data = await response.json()
+      console.log('/^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6', data)
+      Cookies.set('user', JSON.stringify(data.user), { expires: 7 })
+      return data.user
+    } catch (er){
+      console.log(er)
+    }
+  }
+
+
+ 
+    useEffect(() => {
+        const rawUser = Cookies.get('user')
+        let userObj: { uid?: string } | null = null
+        try {
+            userObj = rawUser ? JSON.parse(rawUser) : null
+        } catch (e) {
+            console.error('Failed to parse user cookie', e)
+            userObj = null
+        }
+        if (userObj?.uid) {
+            getUserById(userObj.uid)
+        }
+    }, [getUserById])
   // ----------------------
   // Logout Function
   // ----------------------
