@@ -257,7 +257,7 @@ const SubscriptionPlans = () => {
           </DialogHeader>
           <p>You need to be logged in to continue.</p>
           <DialogFooter>
-            <Link to="/login" className="w-full">
+            <Link to="/auth/employer" className="w-full">
               <Button className="w-full">Login</Button>
             </Link>
           </DialogFooter>

@@ -73,7 +73,7 @@ const JobSeekerProfile = () => {
       return;
     }
 
-      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uuid)
+      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uid)
    
   };
 

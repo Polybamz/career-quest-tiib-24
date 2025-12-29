@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { hasPermission, PLAN_PRE, SubsPlan } from '@/types/subs_type';
 import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
-
+import { uploadToCloudinary } from '../../../utils';
 
 interface Job {
     id: string;
@@ -44,6 +44,7 @@ const JobManagement = () => {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
     const [applyMethod, setApplyMethod] = useState<'email' | 'link'>('email')
+    const [fileToUpload, setFileToUpload] = useState(null)
 
     const { getJobByEmployerId, employerJobState, addJob, deleteJob, addJobState, updateJob, updateJobState, deleteJobState } = useJobs();
     // Form state, updated to match Job interface
@@ -122,11 +123,12 @@ const JobManagement = () => {
 
         // Split tags string into an array
         const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-
+        const [uploadedUrl] = await uploadToCloudinary([fileToUpload], 'dwqq8vtgj', 'yocaco-presets');
+       
         const commonJobData = {
             title: formData.title,
             company: formData.company,
-            logoUrl: formData.logoUrl,
+            logoUrl: uploadedUrl,
             location: formData.location,
             type: formData.type,
             salary: formData.salary,
@@ -218,12 +220,13 @@ const JobManagement = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="logoUrl">Company Logo URL</Label>
+                                    <Label htmlFor="logoUrl">Company Logo</Label>
                                     <Input
                                         id="logoUrl"
-                                        type="url"
-                                        value={formData.logoUrl}
-                                        onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+                                        type="file"
+                                        accept='image/*'
+                                        value={fileToUpload}
+                                        onChange={(e) => setFileToUpload( e.target.value )}
                                         placeholder="https://company.com/logo.png"
 
                                     />

@@ -17,6 +17,8 @@ import { useJobs } from '@/context/useJobContext';
 import { useToast } from '@/hooks/use-toast';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { uploadToCloudinary } from '../../utils'
+
 
 
 // --- TYPE DEFINITIONS ---
@@ -215,7 +217,7 @@ const FailedBox: React.FC<FailedBoxProp> = ({ setStep }) => {
                 </div>
                 <Button variant='ghost' onClick={() => {
                     setStep('form')
-                    Cookies.set('step', 'form', {expires: 0.02})
+                    Cookies.set('step', 'form', { expires: 0.02 })
                 }} className='text-red-600'>Try Again</Button>
 
             </CardHeader>
@@ -229,9 +231,11 @@ const AddJobNoSubs = () => {
     const { amount, count, type: subType } = useParams<{ amount?: string, count?: string, type?: string }>();
     const { addJob, addJobState } = useJobs()
     const [applyMethod, setApplyMethod] = React.useState<string | 'email' | 'link'>('email');
+    const [fileToUpload, setFileToUpload] = React.useState<File | any | null>(null)
     const { toast } = useToast()
     const navigate = useNavigate()
     const [transactionId, setTransactionId] = React.useState('')
+  
 
     // Determine the price from params or set a default if not available
     const jobPrice = amount || '199';
@@ -249,6 +253,10 @@ const AddJobNoSubs = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
+        if (id == 'logoUrl') {
+            setFileToUpload(value)
+            return;
+        }
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
@@ -270,8 +278,19 @@ const AddJobNoSubs = () => {
 
         // Simulated submission success
         try {
-            const data = { ...formData, boosted: subType == 'premium' ? count : null, tags: formData.tags.split(',').map(tag => tag.trim()), applyEmail: applyMethod == 'email' ? formData.applyEmail : null, applyLink: applyMethod == 'link' ? formData.applyLink : null, status: 'pending', transactionId: transactionId };
-             await addJob(data);
+            const [uploadedUrl] = await uploadToCloudinary([fileToUpload], 'dwqq8vtgj', 'yocaco-presets');
+
+            const data = {
+                ...formData,
+                boosted: subType == 'premium' ? count : null,
+                tags: formData.tags.split(',').map(tag => tag.trim()),
+                applyEmail: applyMethod == 'email' ? formData.applyEmail : null,
+                applyLink: applyMethod == 'link' ? formData.applyLink : null,
+                status: 'pending',
+                transactionId: transactionId,
+                logoUrl: uploadedUrl
+            };
+            await addJob(data);
             // await new Promise(resolve => setTimeout(resolve, 1500)); 
             console.log('Job posted:', data);
             setStep('success')
@@ -373,8 +392,8 @@ const AddJobNoSubs = () => {
                                         <Input id="company" value={formData.company} onChange={handleChange} required />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="logoUrl">Company Logo URL (Optional)</Label>
-                                        <Input id="logoUrl" type="url" value={formData.logoUrl} onChange={handleChange} placeholder="https://company.com/logo.png" />
+                                        <Label htmlFor="logoUrl">Company Logo</Label>
+                                        <Input id="logoUrl" type="file" accept='image/*' value={fileToUpload} onChange={(e)=> setFileToUpload(e.target.value)} placeholder="https://company.com/logo.png" />
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="location">Location <span className="text-red-500">*</span></Label>

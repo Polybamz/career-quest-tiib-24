@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import useSubscription from "@/hooks/useSubscribe";
 import { useSearchParams } from "react-router-dom";
 import SubscribeBanna from "../ui/subscribe_banna";
+import { uploadToCloudinary } from "utils";
 interface Job {
   id: string;
   title: string;

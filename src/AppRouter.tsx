@@ -21,11 +21,11 @@ const AppRouter = () => {
   useRouteTransition();
   return (<Routes>
     <Route path="/" element={<Home />} />
-      <Route path="/employer-dashboard" element={<AdminLayout />}>
-              <Route path="/employer-dashboard/" element={<Overview />} />
-              <Route path="/employer-dashboard/jobs_listing" element={<JobManagement/>} />
-              <Route path="/employer-dashboard/settings" element={<div>Comming soon .......</div>} />
-            </Route>
+    <Route path="/employer-dashboard" element={<AdminLayout />}>
+      <Route path="/employer-dashboard/" element={<Overview />} />
+      <Route path="/employer-dashboard/jobs_listing" element={<JobManagement />} />
+      <Route path="/employer-dashboard/settings" element={<div>Comming soon .......</div>} />
+    </Route>
     <Route path="/jobs" element={<Jobs />} />
     <Route path="/coaching" element={<Coaching />} />
     <Route path="/employers" element={<Employers />} />
@@ -34,7 +34,7 @@ const AppRouter = () => {
     <Route path="/auth" element={<Register />} />
     <Route path="/auth/:redirect" element={<Register />} />
     <Route path="/auth/:redirect" element={<Register />} />
-{/* ///////////////////////////////////    <Route path="/job-seeker-profile" element={<JobSeekerProfile />} /> */}
+    <Route path="/job-seeker-profile" element={<JobSeekerProfile />} />
     <Route path="/job-seeker-portal" element={<JobSeekerPortal />} />
     <Route path="/:type/article/:id" element={<ArticlePage />} />
     <Route path="/add-job/:amount/:count/:type" element={<AddJobNoSubs />} />
