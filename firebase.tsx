@@ -271,7 +271,6 @@ export const getJobSeekerProfile = async (uid: string) => {
 // };
 // ...existing code...
 export const getJobAnalytics = async (employerId: string) => {
-  console.log('Fetching job analytics for employer:', employerId);
   try {
     const jobsRef = collection(db, 'jobs');
     const q = query(jobsRef, where('employerId', '==', employerId));

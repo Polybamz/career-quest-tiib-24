@@ -75,7 +75,6 @@ const JobManagement = () => {
             //fetchJobs();
         }
     }, [employerJobState.success, employerJobState['data']])
-    console.log(employerJobState)
 
     useEffect(() => {
         if (user) {

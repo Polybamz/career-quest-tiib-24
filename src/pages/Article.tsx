@@ -66,12 +66,10 @@ const ArticlePage = () => {
     const { getArticleByIdState: { loading, error, data, successful }, getArticle } = useArticle();
 
     useEffect(() => {
-        console.log("ArticlePage: useEffect called", id);
         if (id) {
             getArticle(id);
         }
     }, [getArticle, id]);
-  console.log("ArticlePage: render called", id, loading, error, data, successful);
     // Show loading or error states
     if (loading) {
         return (

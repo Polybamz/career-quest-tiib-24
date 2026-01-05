@@ -41,8 +41,7 @@ interface Job {
 
 const EmployerDashboard = () => {
   const { user, logout } = useAuth();
-  const {getSubsState,
-        fetchUserSubscription } = useSubscription()
+  const {getSubsState } = useSubscription()
   const { toast } = useToast();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -277,8 +276,7 @@ const EmployerDashboard = () => {
       //fetchJobs();
     }
   },[employerJobState.success, employerJobState['data']])
-console.log(employerJobState)
-console.log(user!)
+
   // if (!user) {
   //   return (
   //     <div className="min-h-screen flex items-center justify-center">

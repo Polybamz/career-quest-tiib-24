@@ -81,7 +81,6 @@ interface MvcContent {
   //--- Add banner ---
   const addBanner = useCallback(async (data: any) => {
     setAddBannerState({ loading: true, success: null, error: null });
-    console.log("addBanner called with data:", data);
     try {
       const response = await fetch(`${BASE_URL}/api/banner/add-banner`, {
         method: "POST",

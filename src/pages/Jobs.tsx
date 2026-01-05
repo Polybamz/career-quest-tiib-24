@@ -45,7 +45,6 @@ const Jobs = () => {
     return typeof window !== "undefined" ? window.innerWidth : 0;
   }, [])
 
-  console.log('screen width...................', screenWidth)
   const boostedJobs = useMemo(() => {
     if (jobLoading) return [];
     return loadedJobs.filter(job => job.boosted !== null)
@@ -86,7 +85,6 @@ const Jobs = () => {
   };
 
   type Job = typeof loadedJobs[0];
-  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', loadedJobs)
 
 
 

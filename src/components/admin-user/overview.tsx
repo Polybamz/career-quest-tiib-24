@@ -35,14 +35,12 @@ interface Job {
 
 const Overview = () => {
   const [searchParams] = useSearchParams();
-  console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',searchParams.get('id'))
   const { user, } = useAuth()
   const [isSubscribed, setIsSubscribed] = React.useState<boolean>( false)
   const { getJobByEmployerId, employerJobState, getEmployerJobAnalytics, employerJobAnalisticsState: { loading: analyticsLoading, data: analytics, error: analyticsError } } = useJobs();
   const { getSubsState,
      } = useSubscription()
   const [jobs, setJobs] = React.useState<Job[]>([]);
-  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',getSubsState)
   React.useEffect(() => {
     if (user) {
       // fetchJobs();
@@ -68,7 +66,6 @@ const Overview = () => {
   }, [employerJobState.success, employerJobState['data']])
 
 
-  console.log('kkkkkkkkkkkkkkkkkkkkk', user)
 
   // Determine the user's plan safely (fall back to Starter)
   const getUserPlan = (): SubsPlan => {

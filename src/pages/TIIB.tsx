@@ -46,7 +46,6 @@ const TIIB = () => {
   // Function to update the state on scroll
   const handleScroll = () => {
     setScrollY(window.scrollY);
-    // console.log('Croooooooooooooooooooooooool',window.PageTransitionEvent )
   };
 
   useEffect(() => {

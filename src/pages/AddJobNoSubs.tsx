@@ -292,7 +292,6 @@ const AddJobNoSubs = () => {
             };
             await addJob(data);
             // await new Promise(resolve => setTimeout(resolve, 1500)); 
-            console.log('Job posted:', data);
             setStep('success')
             // resetForm();
         } catch (error) {

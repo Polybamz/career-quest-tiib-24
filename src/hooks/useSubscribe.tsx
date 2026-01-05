@@ -33,7 +33,6 @@ const useSubscription = () => {
             error: null,
             success: false
         })
-        console.log(payload)
 
         try {
 
@@ -47,7 +46,6 @@ const useSubscription = () => {
             if (!response.ok) throw Error('Error subscribing')
 
             const data = response.json()
-            console.log(data)
             // Cookies.set('subsStatus', 'pending')
 
             setSubscriptionState({
@@ -70,9 +68,7 @@ const useSubscription = () => {
             ...getSubsState,
             loaing: true
         })
-        console.log('/////////////////////////////////////////////////////',userId)
         try {
-     console.log(`${BASE_URL}/subscription/emloyer-subscription/${userId}`)
 
             const response = await fetch(`${BASE_URL}/subscription/emloyer-subscription/${userId}`, {
                 method: 'GET',
@@ -80,12 +76,10 @@ const useSubscription = () => {
             }
             )
      // LOG URL
-            console.log('Response:', response)
 
             if (!response.ok) throw Error('Error fetching subscription')
 
             const data =await response.json()
-            console.log('dddddddddddddddddddddddddddddddddddddddddddddddd',data)
 
             setGetSubsState({
                 loaing: false,
@@ -109,7 +103,6 @@ const useSubscription = () => {
         try {
             userObj = rawUser ? JSON.parse(rawUser) : null
         } catch (e) {
-            console.error('Failed to parse user cookie', e)
             userObj = null
         }
         if (userObj?.uid) {

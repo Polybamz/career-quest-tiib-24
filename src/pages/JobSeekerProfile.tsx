@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { createJobSeekerProfile, getJobSeekerProfile } from '../../firebase';
+import {  getJobSeekerProfile } from '../../firebase';
 import { useToast } from '@/hooks/use-toast';
 import { User, GraduationCap, MapPin, Phone, Mail, FileText, Award } from 'lucide-react';
 
@@ -50,7 +50,7 @@ const JobSeekerProfile = () => {
     if (!user) return;
     
     try {
-      const existingProfile = await getJobSeekerProfile(user.uid);
+      const existingProfile = await getJobSeekerProfile(user.uuid);
       if (existingProfile) {
         setProfileExists(true);
         navigate('/job-seeker-portal');
@@ -73,7 +73,7 @@ const JobSeekerProfile = () => {
       return;
     }
 
-      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uid)
+      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uuid)
    
   };
 
@@ -85,12 +85,12 @@ const JobSeekerProfile = () => {
       navigate('/job-seeker-portal');
 
     }
-    // if(error){
-    //   toast({
-    //     title:'Error',
-    //     description: error
-    //   })
-    // }
+    if(error){
+      toast({
+        title:'Error',
+        description: error
+      })
+    }
   })
 
   if (!user) {
@@ -105,11 +105,10 @@ const JobSeekerProfile = () => {
     );
   }
 
-  //console.log(user)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Card>
+      <Card className='max-lg:mb-16'>
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold">Complete Your Job Seeker Profile</CardTitle>
           <CardDescription>

@@ -107,7 +107,6 @@ export const useJobs = (): UseJobsHook => {
           throw new Error(`Failed to fetch jobs: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log('Fetched Jobs:', data);
         setJobs(data);
       } catch (err) {
         const message =
@@ -133,7 +132,6 @@ export const useJobs = (): UseJobsHook => {
         throw new Error(errorData.message || `Failed to fetch jobs: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('Fetched Jobs:', data);
       setJobs(data);
       setEmployerJobState({ loading: false, success: true, error: null, data: data });
     } catch (err) {
@@ -156,7 +154,6 @@ export const useJobs = (): UseJobsHook => {
         throw new Error(errorData.message || `Failed to add job: ${response.statusText}`);
       }
       const data: Job = await response.json();
-      console.log('Added Job:', data);
       //setJobs((prev.jobs) => [...prev, data]);
       setAddError(null);
       setJobAdded(true);
@@ -240,12 +237,10 @@ export const useJobs = (): UseJobsHook => {
         throw new Error(errorData.message || `Failed to fetch jobs: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('Fetched Jobs:', data);
       setEmployerJobAnalyticsState({ loading: false, success: true, error: null, data: data });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error occurred while fetching jobs";
       setEmployerJobAnalyticsState({ loading: false, success: false, error: message, data: null });
-      console.error("Fetch Jobs Error:", err);
     }
   }
   // useEffect to reset jobAdded after successful addition
