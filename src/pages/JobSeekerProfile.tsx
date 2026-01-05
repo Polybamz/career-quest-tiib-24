@@ -50,7 +50,7 @@ const JobSeekerProfile = () => {
     if (!user) return;
     
     try {
-      const existingProfile = await getJobSeekerProfile(user.uuid);
+      const existingProfile = await getJobSeekerProfile(user.uid);
       if (existingProfile) {
         setProfileExists(true);
         navigate('/job-seeker-portal');
@@ -73,7 +73,7 @@ const JobSeekerProfile = () => {
       return;
     }
 
-      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uuid)
+      await createUpdateJSProfile({...formData, graduationYear: parseInt(formData.graduationYear)}, user.uid)
    
   };
 
