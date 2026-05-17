@@ -156,7 +156,7 @@ const ArticlePage = () => {
             </article>
             
             {/* Custom Tailwind/Prose Styles (Embedded for single-file mandate) */}
-            <style jsx="true">{`
+            <style>{`
                 /* Ensure article body text is readable and styled */
                 .article-content-wrapper {
                     line-height: 1.8;
