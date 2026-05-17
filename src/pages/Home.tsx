@@ -138,55 +138,69 @@ const Home = () => {
       <div className="w-full  border-white min-h-screen">
         {/* hero section */}
         <section
-          className="py-20 min-h-[80vh] relative overflow-hidden"
+          className="py-24 min-h-[82vh] relative overflow-hidden"
           style={{
-            backgroundImage: `linear-gradient(rgba(51, 31, 31, 0.4), rgba(0, 0, 0, 0.6)), url(${yococaEnt[selectedImage]})`,
+            backgroundImage: `linear-gradient(135deg, hsla(217, 91%, 18%, 0.85), hsla(222, 47%, 8%, 0.75)), url(${yococaEnt[selectedImage]})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
+            backgroundRepeat: 'no-repeat',
+            transition: 'background-image 1.2s ease-in-out'
           }}
         >
-          <div className="absolute  inset-0 bg-gradient-to-r from-primary/20 to-secondary/20"></div>
-          <div className="container  mx-auto px-4 relative z-10">
+          <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/30 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl pointer-events-none" />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left fade-in-left">
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
-                  Where Careers Take Shape, and Integrity Opens Doors
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-xs font-medium mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  Trusted by 5,000+ professionals worldwide
+                </div>
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white leading-[1.1] tracking-tight">
+                  Where Careers Take Shape, and <span className="bg-gradient-to-r from-accent to-orange-300 bg-clip-text text-transparent">Integrity</span> Opens Doors
                 </h1>
-                <p className="text-xl text-white/90 mb-8 drop-shadow-md">
-                  We are more than just a job board – we are a career growth ecosystem committed to connecting ambitious job seekers with verified opportunities.
+                <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                  A career growth ecosystem connecting ambitious job seekers with verified opportunities — not just another job board.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                   <Link to={'/jobs'}>
-                    <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-white shadow-lg">
-                      Find Jobs
+                    <Button size="lg" className="text-base px-7 h-12 bg-gradient-accent text-accent-foreground shadow-soft-lg hover:shadow-soft-xl border-0">
+                      Browse Jobs →
                     </Button>
                   </Link>
                   <Link to={'/coaching'}>
-                    <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-primary shadow-lg">
-                      Get Coaching
+                    <Button variant="outline" size="lg" className="text-base px-7 h-12 bg-white/10 backdrop-blur-md border-white/30 text-white hover:bg-white hover:text-primary transition-all">
+                      Get Career Coaching
                     </Button>
                   </Link>
-
+                </div>
+                <div className="flex flex-wrap gap-x-6 gap-y-2 justify-center lg:justify-start mt-8 text-white/70 text-sm">
+                  <div className="flex items-center gap-2"><span className="text-accent">✓</span> Verified employers</div>
+                  <div className="flex items-center gap-2"><span className="text-accent">✓</span> Expert coaching</div>
+                  <div className="flex items-center gap-2"><span className="text-accent">✓</span> 75% success rate</div>
                 </div>
               </div>
               <div className="relative fade-in-right">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-2xl border border-white/20">
-                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Transform Your Career?</h3>
-                  <p className="text-white/90 mb-6">Join thousands of professionals who have found their dream jobs through our platform.</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-white/90">
-                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
-                      <span>Personalized job matching</span>
-                    </div>
-                    <div className="flex items-center text-white/90">
-                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
-                      <span>Expert career coaching</span>
-                    </div>
-                    <div className="flex items-center text-white/90">
-                      <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
-                      <span>Access to top employers</span>
-                    </div>
+                <div className="glass-panel p-8 shadow-soft-xl">
+                  <h3 className="text-2xl font-bold text-white mb-2">Ready to Transform Your Career?</h3>
+                  <p className="text-white/80 mb-6 text-sm">Join thousands who found their dream jobs through our platform.</p>
+                  <div className="space-y-4">
+                    {[
+                      { t: 'Personalized job matching', d: 'AI-assisted recommendations tailored to you' },
+                      { t: 'Expert career coaching', d: '1-on-1 sessions with industry veterans' },
+                      { t: 'Access to top employers', d: 'Direct introductions to verified companies' }
+                    ].map((f, i) => (
+                      <div key={i} className="flex gap-3 items-start">
+                        <div className="mt-1 w-8 h-8 rounded-lg bg-accent/20 border border-accent/30 flex items-center justify-center shrink-0">
+                          <span className="text-accent font-semibold text-sm">{i+1}</span>
+                        </div>
+                        <div>
+                          <p className="text-white font-medium text-sm">{f.t}</p>
+                          <p className="text-white/60 text-xs">{f.d}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
