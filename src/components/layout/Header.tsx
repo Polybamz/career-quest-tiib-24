@@ -71,14 +71,13 @@ const Header = () => {
               </Link>
             ))}
             {user ? (
-              <Link to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="py-1 px-4 rounded-sm text-white bg-primary ">Portal</Link>) :
-               (<div className=" flex gap-2">
-
-                <Link to={{pathname:'/auth', search: 'q=login'}} className="py-[2px] px-4 rounded-sm border-2 border-primary text-primary ">
-              Login
+              <Link to={user.userType == 'employer' ? '/employer-dashboard' : '/job-seeker-portal'} className="inline-flex items-center h-9 px-4 rounded-md text-sm font-medium text-primary-foreground bg-gradient-primary shadow-soft hover:shadow-soft-lg transition-all">Go to Portal</Link>) :
+               (<div className="flex items-center gap-2">
+                <Link to={{pathname:'/auth', search: 'q=login'}} className="inline-flex items-center h-9 px-4 rounded-md text-sm font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors">
+              Sign in
             </Link>
-            <Link to={{pathname:'/auth', search: 'q=register'}} className="py-1 px-4 rounded-sm text-white bg-primary ">
-              Register
+            <Link to={{pathname:'/auth', search: 'q=register'}} className="inline-flex items-center h-9 px-4 rounded-md text-sm font-medium text-primary-foreground bg-gradient-primary shadow-soft hover:shadow-soft-lg transition-all">
+              Get started
             </Link>
                </div>)}
           </nav>
