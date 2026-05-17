@@ -89,46 +89,51 @@ const Jobs = () => {
 
 
   return (
-    <div className="lg:min-h-screen bg-muted/20 w-full">
+    <div className="lg:min-h-screen bg-gradient-subtle w-full">
       {/* --- Top Banner Ad --- */}
       <div className="w-full flex justify-center items-center">
         <AdBanner position="top" />
       </div>
 
-
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-10">
         {/* --- Header --- */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold tracking-tight mb-2">Find Your Next Opportunity</h1>
-          <p className="text-lg text-muted-foreground">
-            Search through {loadedJobs?.length} open positions.
+        <div className="text-center mb-8 fade-in-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            {loadedJobs?.length || 0} live opportunities
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Find your next opportunity</h1>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            Hand-picked roles from verified employers — updated daily.
           </p>
         </div>
 
         {/* --- Search & Filters Bar --- */}
-        <Card className="mb-6 shadow-sm">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-              <div className="md:col-span-2">
+        <Card className="mb-8 shadow-soft border-border/60 rounded-2xl">
+          <CardContent className="p-4 md:p-5">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+              <div className="md:col-span-5 relative">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Job title, keywords, or company"
+                  placeholder="Job title, skills, or company"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-12 text-base"
+                  className="h-12 text-base pl-10 border-border/60 focus-visible:ring-primary/40"
                 />
               </div>
-              <div>
+              <div className="md:col-span-4 relative">
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="City or location"
+                  placeholder="City, country, or 'Remote'"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="h-12 text-base"
+                  className="h-12 text-base pl-10 border-border/60 focus-visible:ring-primary/40"
                 />
               </div>
-              <div>
+              <div className="md:col-span-3">
                 <Select value={jobType} onValueChange={setJobType}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Job Type" />
+                  <SelectTrigger className="h-12 text-base border-border/60">
+                    <SelectValue placeholder="All job types" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="All">All Types</SelectItem>
@@ -213,35 +218,43 @@ const Jobs = () => {
             <h2 className="text-xl font-semibold mb-4">
               {filteredJobs.length} Job{filteredJobs.length !== 1 && 's'} Found
             </h2>
-            <div className="space-y-3  pr-2">
+            <div className="space-y-3 pr-2">
               {filteredJobs.length > 0 ? (
-                filteredJobs.map((job) => (
-                  <Card
-                    key={job.id}
-                    onClick={() => setSelectedJob(job)}
-                    className={cn(
-                      "cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary",
-                      selectedJob?.id === job.id && "border-primary bg-primary/5 shadow-md"
-                    )}
-                  >
-                    <CardContent className="p-4 flex gap-4">
-                      <img src={job.logoUrl} alt={`${job.company} logo`} className="h-12 w-12 rounded-md bg-muted" />
-                      <div className="flex-grow">
-                        <p className="text-sm text-muted-foreground">{job.company}</p>
-                        <h3 className="font-semibold text-base leading-tight">{job.title}</h3>
-                        <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1">
-                          <div className="flex items-center gap-1"><MapPin size={12} /> {job.location}</div>
-                          <div className="flex items-center gap-1"><DollarSign size={12} /> {job.salary.split(' ')[0]}</div>
-                          <div className="flex items-center gap-1"><Briefcase size={12} /> {job.type}</div>
+                filteredJobs.map((job) => {
+                  const isRemote = /remote/i.test(job.location) || /remote/i.test(job.type);
+                  return (
+                    <Card
+                      key={job.id}
+                      onClick={() => setSelectedJob(job)}
+                      className={cn(
+                        "cursor-pointer rounded-xl border-border/60 shadow-soft-sm transition-all duration-200 hover:shadow-soft-lg hover:-translate-y-0.5 hover:border-primary/40",
+                        selectedJob?.id === job.id && "border-primary/60 bg-primary/[0.04] shadow-soft-lg ring-1 ring-primary/20"
+                      )}
+                    >
+                      <CardContent className="p-4 flex gap-4">
+                        <img src={job.logoUrl} alt={`${job.company} logo`} className="h-12 w-12 rounded-lg object-cover bg-muted ring-1 ring-border/60 shrink-0" />
+                        <div className="flex-grow min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-xs text-muted-foreground font-medium truncate">{job.company}</p>
+                            <span className="text-[10px] text-muted-foreground shrink-0 flex items-center gap-1"><Clock size={10} />{timeAgo(job.postedDate)}</span>
+                          </div>
+                          <h3 className="font-semibold text-base leading-snug mt-0.5 line-clamp-2 group-hover:text-primary">{job.title}</h3>
+                          <div className="flex flex-wrap gap-1.5 mt-2.5">
+                            <span className="badge-soft-primary inline-flex items-center gap-1"><MapPin size={10} />{job.location}</span>
+                            <span className="badge-soft-accent inline-flex items-center gap-1"><DollarSign size={10} />{job.salary.split(' ')[0]}</span>
+                            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-foreground/70 border border-border"><Briefcase size={10} />{job.type}</span>
+                            {isRemote && <span className="badge-soft-success">Remote</span>}
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                      </CardContent>
+                    </Card>
+                  );
+                })
               ) : (
-                <Card className="text-center py-12">
-                  <p className="text-lg text-muted-foreground">No jobs found.</p>
-                  <p className="text-sm text-muted-foreground mt-1">Try adjusting your search filters.</p>
+                <Card className="text-center py-16 border-dashed border-2 border-border bg-transparent shadow-none">
+                  <Search className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
+                  <p className="text-lg font-medium">No jobs match your filters</p>
+                  <p className="text-sm text-muted-foreground mt-1">Try a broader search or clear filters.</p>
                 </Card>
               )}
             </div>
