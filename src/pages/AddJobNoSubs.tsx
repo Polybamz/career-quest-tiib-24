@@ -239,7 +239,7 @@ const AddJobNoSubs = () => {
 
     // Determine the price from params or set a default if not available
     const jobPrice = amount || '199';
-    const initStep: 'payment' | 'form' | 'success' | 'failed' = Cookies.get('step') || 'payment'
+    const initStep: 'payment' | 'form' | 'success' | 'failed' = (Cookies.get('step') as 'payment' | 'form' | 'success' | 'failed') || 'payment'
 
     // STEP 1: Payment, STEP 2: Form
     const [step, setStep] = React.useState<'payment' | 'form' | 'success' | 'failed'>(jobPrice ? initStep : 'form');
